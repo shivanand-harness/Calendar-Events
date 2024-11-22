@@ -31,7 +31,6 @@ export enum View {
   DAY = "DAY",
 }
 
-
 export interface EventSpec<T> {
   startDate: Moment;
   endDate: Moment;
@@ -39,8 +38,8 @@ export interface EventSpec<T> {
 }
 
 export interface CalendarEventSpec<T> extends EventSpec<T> {
-  span: number
-  startDateOverLapping: boolean
-  endDateOverLapping: boolean
-  left: number
+  span: number;
+  startDateOverLapping: boolean;
+  endDateOverLapping: boolean;
+  left: number;
 }

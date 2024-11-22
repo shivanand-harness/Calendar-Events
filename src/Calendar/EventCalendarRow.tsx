@@ -1,4 +1,4 @@
-import { EVENT_HEIGHT, PADDING } from "./constants";
+import { DEFAULT_TOP_PADDING, EVENT_HEIGHT, PADDING } from "./constants";
 import Event from "./Event";
 import { CalendarEventSpec } from "./types";
 
@@ -23,16 +23,29 @@ interface EventCalendarRowProps<T> {
   eventRows: Array<Array<CalendarEventSpec<T>>>;
   colWidth: number;
   colHeight: number;
+  showAllEvents?: boolean;
 }
 
 export default function EventCalendarRow<T>(props: EventCalendarRowProps<T>) {
-  const { eventRows, colWidth, colHeight } = props;
-  const allowedEventRowToShow = Math.floor((colHeight - EVENT_HEIGHT - PADDING - PADDING) / EVENT_HEIGHT)
-  const slicedRows = eventRows.slice(0, allowedEventRowToShow - 1)
+  const { eventRows, colWidth, colHeight, showAllEvents } = props;
+  const allowedEventRowToShow = Math.floor(
+    (colHeight - DEFAULT_TOP_PADDING) / (EVENT_HEIGHT + PADDING)
+  );
+  const slicedRows = showAllEvents
+    ? eventRows
+    : eventRows.slice(0, allowedEventRowToShow - 1);
+  
+
   return (
     <>
       {slicedRows.map((each, idx) => (
-        <EventsRow key={idx} events={each} rowIndex={idx} colWidth={colWidth} colHeight={colHeight} />
+        <EventsRow
+          key={idx}
+          events={each}
+          rowIndex={idx}
+          colWidth={colWidth}
+          colHeight={colHeight}
+        />
       ))}
     </>
   );

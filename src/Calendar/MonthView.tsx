@@ -17,10 +17,11 @@ interface MonthViewProps<T> {
   currentDate: Moment;
   events: Array<EventSpec<T>>;
   startOfWeek: WEEK
+  showAllEvents?: boolean
 }
 
 export default function MonthView<T>(props: MonthViewProps<T>) {
-  const { events, currentDate, startOfWeek } = props;
+  const { events, currentDate, startOfWeek, showAllEvents } = props;
   const monthArr = useMemo(() => generateMonthView(currentDate), [currentDate]);
   const headers = generateMonthViewHeaders(startOfWeek);
   const chunkArray = useMemo(() => getChunkArray(monthArr, 7), [monthArr]);
@@ -37,7 +38,7 @@ export default function MonthView<T>(props: MonthViewProps<T>) {
         ))}
       </div>
       {chunkArray.map((cols, rowIdx) => (
-        <TableRowWithEvents key={rowIdx} eventRows={eventRows[rowIdx]}>
+        <TableRowWithEvents key={rowIdx} eventRows={eventRows[rowIdx]} showAllEvents={showAllEvents}>
           {cols.map((col, colIdx) => (
             <div
               key={colIdx}

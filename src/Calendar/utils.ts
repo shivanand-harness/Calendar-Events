@@ -83,8 +83,8 @@ export function getEventsRowByStartDateAndEndDate<T>(
   const filteredTransformedEvents = events
     .filter((each) => {
       return (
-        startDate.isBetween(each.startDate, each.endDate, undefined, "[]") ||
-        each.startDate.isBetween(startDate, endDate, undefined, "[]")
+        startDate.isBetween(each.startDate, each.endDate, 'day', "[]") ||
+        each.startDate.isBetween(startDate, endDate, 'day', "[]")
       );
     })
     .map((each) => {

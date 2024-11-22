@@ -21,9 +21,10 @@ export default function App() {
     <div className="App">
       <Calendar
         events={events}
-        defaultView={View.MONTH}
+        defaultView={View.WEEK}
         startOfWeek={WEEK.MON}
         allowedViews={[View.MONTH, View.WEEK, View.DAY]}
+        showAllEvents
       />
     </div>
   );

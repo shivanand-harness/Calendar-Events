@@ -15,10 +15,11 @@ interface CalendarProps<T> {
   defaultView?: View
   startOfWeek?: WEEK
   allowedViews?: Array<View>
+  showAllEvents?: boolean
 }
 
 export default function Calendar<T>(props: CalendarProps<T>) {
-  const { events, defaultView, startOfWeek = WEEK.SUN, allowedViews } = props
+  const { events, defaultView, startOfWeek = WEEK.SUN, allowedViews, showAllEvents } = props
   const [currentDate, setCurrentDate] = useState<Moment>(moment());
   const [initialised, setInitialised] = useState(false);
   const [activeView, setActiveView] = useState(defaultView ?? View.MONTH);
@@ -75,10 +76,10 @@ export default function Calendar<T>(props: CalendarProps<T>) {
         <DayView currentDate={currentDate} events={events} />
       )}
       {activeView === View.WEEK && (
-        <WeekView startOfWeek={startOfWeek} currentDate={currentDate} events={events} />
+        <WeekView startOfWeek={startOfWeek} currentDate={currentDate} events={events} showAllEvents={showAllEvents} />
       )}
       {activeView === View.MONTH && (
-        <MonthView startOfWeek={startOfWeek} currentDate={currentDate} events={events} />
+        <MonthView startOfWeek={startOfWeek} currentDate={currentDate} events={events} showAllEvents={showAllEvents} />
       )}
     </div>
   );

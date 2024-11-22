@@ -6,5 +6,6 @@ export const AllowedCalendarViewList = [
   { label: "MONTH", value: View.MONTH },
 ];
 
+export const DEFAULT_TOP_PADDING = 30;
 export const EVENT_HEIGHT = 30;
 export const PADDING = 10

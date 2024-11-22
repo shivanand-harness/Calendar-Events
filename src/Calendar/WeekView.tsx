@@ -16,10 +16,11 @@ interface WeekViewProps<T> {
   currentDate: Moment;
   events: Array<EventSpec<T>>;
   startOfWeek: WEEK
+  showAllEvents?: boolean
 }
 
 export default function WeekView<T>(props: WeekViewProps<T>) {
-  const { events, currentDate, startOfWeek } = props;
+  const { events, currentDate, startOfWeek, showAllEvents } = props;
   const weekArr = useMemo(() => generateWeekView(currentDate), [currentDate]);
   const headers = generateMonthViewHeaders(startOfWeek);
 
@@ -39,7 +40,7 @@ export default function WeekView<T>(props: WeekViewProps<T>) {
           <div className={classNames(css.tableCol, css.headerCol)}>{each}</div>
         ))}
       </div>
-      <TableRowWithEvents eventRows={eventRows}>
+      <TableRowWithEvents eventRows={eventRows} showAllEvents={showAllEvents}>
         {weekArr.map((col, colIdx) => (
           <div key={colIdx} className={classNames(css.tableCol)}>
             {col.date.format("D")}
