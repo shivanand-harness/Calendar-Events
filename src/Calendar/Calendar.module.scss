@@ -1,0 +1,147 @@
+.actionsWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0px;
+}
+
+.monthViewCalendarWrapper {
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  & > .tableRow {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    min-height: 200px;
+    position: relative;
+  }
+
+  & .tableHeaderRow {
+    height: 40px;
+    min-height: unset;
+  }
+
+  & .tableCol {
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+    text-align: right;
+    padding: 10px;
+  }
+
+  & .notCurrentMonth {
+    color: #cdcdcd;
+  }
+
+  & .headerCol {
+    text-align: center;
+    font-weight: 800;
+  }
+}
+
+.weekViewCalendarWrapper {
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  min-height: 700px;
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  & > .tableRow {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    position: relative;
+  }
+
+  & .tableCol {
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+    text-align: right;
+    padding: 10px;
+  }
+
+  & .headerCol {
+    text-align: center;
+    font-weight: 800;
+  }
+}
+
+.dayViewCalendarWrapper {
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  min-height: 700px;
+  display: grid;
+  grid-template-rows: max-content 1fr;
+
+  & > .tableRow {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    position: relative;
+  }
+
+  & .tableCol {
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+    text-align: right;
+    padding: 10px;
+  }
+
+  & .tableHeaderRow {
+    text-align: center;
+    font-weight: 800;
+  }
+
+  & .headerCol {
+    text-align: center;
+    font-weight: 800;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+}
+
+.actionButtons {
+  & button {
+    padding: 5px 10px;
+    border-radius: 0px;
+    border: 1px solid #cdcdcd;
+  }
+
+  & button:first-child {
+    border-radius: 5px 0px 0px 5px;
+  }
+
+  & button:last-child {
+    border-radius: 0px 5px 5px 0px;
+  }
+
+  & button.active {
+    background-color: #0a3364;
+    color: #ffffff;
+  }
+}
+
+.navigationBtnWrapper {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.event {
+  background-color: blue;
+  border-radius: 12px;
+  position: absolute;
+  height: 30px;
+  top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+.start_overlapping {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.end_overlapping {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}

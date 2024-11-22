@@ -1,0 +1,142 @@
+import moment, { Moment } from "moment";
+import { CalendarEventSpec, EventSpec } from "./types";
+
+const startOfWeek = (date: Moment) => date.clone().startOf("week");
+
+const endOfWeek = (date: Moment) => date.clone().endOf("week");
+
+export const updateMomentStarOfWeekConfig = (startOfWeekDay: number) => {
+  moment.updateLocale("en", {
+    week: {
+      dow: startOfWeekDay,
+    },
+  });
+};
+
+export const generateMonthViewHeaders = (startOfWeekDay: number) => {
+  const weekdays = moment.weekdaysShort(); // ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  return [...weekdays.slice(startOfWeekDay), ...weekdays.slice(0, startOfWeekDay)]; // Move 'Sun' to the end
+};
+
+export const generateMonthView = (currentDate: Moment) => {
+  const startOfMonth = currentDate.clone().startOf("month");
+  const endOfMonth = currentDate.clone().endOf("month");
+
+  const startDay = startOfMonth.clone().startOf("week");
+  const endDay = endOfMonth.clone().endOf("week");
+
+  const days = [];
+  let day = startDay.clone();
+  while (!day.isAfter(endDay, "day")) {
+    days.push({
+      date: day.clone(),
+      isCurrentMonth: day.isSame(currentDate, "month"),
+    });
+    day.add(1, "day");
+  }
+  return days;
+};
+
+export const generateWeekView = (currentDate: Moment) => {
+  const startDay = startOfWeek(currentDate);
+  const endDay = endOfWeek(currentDate);
+  const days = [];
+  let day = startDay.clone();
+  while (!day.isAfter(endDay, "day")) {
+    days.push({
+      date: day.clone(),
+    });
+    day.add(1, "day");
+  }
+  return days;
+};
+
+export function getEventsByRow<T>(
+  events: Array<CalendarEventSpec<T>>,
+  result: Array<Array<CalendarEventSpec<T>>> = []
+): Array<Array<CalendarEventSpec<T>>> {
+  if (events.length === 0) return result;
+  const filterBy: Array<string> = [];
+  const pendingItems: Array<CalendarEventSpec<T>> = [];
+  const stepResult = events.filter((each) => {
+    if (filterBy.includes(each.startDate.format("DD/MM/YYYY"))) {
+      pendingItems.push(each);
+      return false;
+    } else {
+      for (let i = 0; i < each.span; i++) {
+        filterBy.push(
+          each.startDate.clone().add(i, "days").format("DD/MM/YYYY")
+        );
+      }
+      return true;
+    }
+  });
+  result.push(stepResult);
+  return getEventsByRow(pendingItems, result);
+}
+
+export function getEventsRowByStartDateAndEndDate<T>(
+  events: Array<EventSpec<T>>,
+  startDate: Moment,
+  endDate: Moment
+): Array<Array<CalendarEventSpec<T>>> {
+  const filteredTransformedEvents = events
+    .filter((each) => {
+      return (
+        startDate.isBetween(each.startDate, each.endDate, undefined, "[]") ||
+        each.startDate.isBetween(startDate, endDate, undefined, "[]")
+      );
+    })
+    .map((each) => {
+      let startDateOverLapping = false;
+      let endDateOverLapping = false;
+      let eventStartDate = each.startDate.clone().startOf("day");
+      if (eventStartDate.isBefore(startDate.clone().startOf("day"))) {
+        startDateOverLapping = true;
+        eventStartDate = startDate.clone().startOf("day");
+      }
+
+      let eventEndDate = each.endDate.clone().endOf("day");
+      if (eventEndDate.isAfter(endDate.clone().endOf("day"))) {
+        endDateOverLapping = true;
+        eventEndDate = endDate.clone().endOf("day");
+      }
+
+      const span = eventEndDate.diff(eventStartDate, "days") + 1;
+      return {
+        actualStartDate: each.startDate,
+        actualEndDate: each.endDate,
+        startDate: eventStartDate,
+        endDate: eventEndDate,
+        span,
+        startDateOverLapping,
+        endDateOverLapping,
+        eventInfo: each.eventInfo,
+        left: eventStartDate.diff(startDate, "days"),
+      };
+    })
+    .sort((a, b) => {
+      const l1 = a.startDate;
+      const l2 = b.startDate;
+
+      const s1 = a.actualEndDate.diff(a.actualStartDate, "days");
+      const s2 = b.actualEndDate.diff(b.actualStartDate, "days");
+      if (l1.isAfter(l2)) return 1;
+      if (l1.isBefore(l2)) return -1;
+      if (s1 > s2) return -1;
+      if (s1 < s2) return 1;
+      return 0;
+    });
+  return getEventsByRow(filteredTransformedEvents);
+}
+
+export function getChunkArray<T>(
+  array: Array<T>,
+  chunkSize: number
+): Array<Array<T>> {
+  const result = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    result.push(array.slice(i, i + chunkSize));
+  }
+  return result;
+}
