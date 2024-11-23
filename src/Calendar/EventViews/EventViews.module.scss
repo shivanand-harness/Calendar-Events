@@ -1,0 +1,30 @@
+.event {
+  background-color: blue;
+  border-radius: 12px;
+  position: absolute;
+  height: 30px;
+  top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 12px;
+}
+
+.start_overlapping {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.end_overlapping {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.showMoreEvent {
+  position: absolute;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 12px;
+}

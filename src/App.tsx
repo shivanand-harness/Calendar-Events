@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import Calendar from "./Calendar/Calendar";
 import "./styles.css";
-import { MOCK_CALENDAR_EVENTS } from "./Calendar/mockData";
+import { MOCK_CALENDAR_EVENTS } from "./mockData";
 import moment from "moment";
 import { View, WEEK } from "./Calendar/types";
 
@@ -24,7 +24,6 @@ export default function App() {
         defaultView={View.MONTH}
         startOfWeek={WEEK.MON}
         allowedViews={[View.MONTH, View.WEEK, View.DAY]}
-        showAllEvents={false}
       />
     </div>
   );

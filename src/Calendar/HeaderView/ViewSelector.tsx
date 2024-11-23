@@ -1,24 +1,24 @@
 import classNames from "classnames";
-import { AllowedCalendarViewList } from "./constants";
-import { View } from "./types";
+import { AllowedCalendarViewList } from "../constants";
+import { View } from "../types";
 
-import css from "./Calendar.module.scss";
+import css from "./headerView.module.scss";
 
 interface ViewSelectorProps {
   activeView: View;
   onChange: (view: View) => void;
-  allowedViews?: Array<View>
+  allowedViews?: Array<View>;
 }
 
 export default function ViewSelector(props: ViewSelectorProps) {
-  const { allowedViews } = props
+  const { allowedViews } = props;
   return (
     <div className={css.actionButtons}>
-      {AllowedCalendarViewList.filter(each => {
-        if (allowedViews)  {
-          return allowedViews.includes(each.value)
+      {AllowedCalendarViewList.filter((each) => {
+        if (allowedViews) {
+          return allowedViews.includes(each.value);
         }
-        return true
+        return true;
       }).map((each) => (
         <button
           key={each.value}

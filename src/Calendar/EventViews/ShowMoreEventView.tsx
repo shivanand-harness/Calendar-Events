@@ -1,18 +1,19 @@
-import { DEFAULT_TOP_PADDING, EVENT_HEIGHT, PADDING } from "./constants";
-import { CalendarEventSpec } from "./types";
-import styles from "./Calendar.module.scss";
+import { DEFAULT_TOP_PADDING, EVENT_HEIGHT, PADDING } from "../constants";
+import { CalendarEventSpec } from "../types";
+import styles from "./EventViews.module.scss";
 
-interface ShowMoreEventProps<T> {
+interface ShowMoreEventViewProps<T> {
   span: number;
   left: number;
   list: Array<CalendarEventSpec<T>>;
   colWidth: number
   allowedNumberOfRows: number;
+  showAllEvents: boolean;
 }
 
-export default function ShowMoreEvent<T>(props: ShowMoreEventProps<T>) {
-  const { span, left, list, allowedNumberOfRows, colWidth } = props;
-  if (list.length <= allowedNumberOfRows) return <></>;
+export default function ShowMoreEventView<T>(props: ShowMoreEventViewProps<T>) {
+  const { span, left, list, allowedNumberOfRows, colWidth, showAllEvents } = props;
+  if (list.length <= allowedNumberOfRows || showAllEvents) return <></>;
   const classes = [styles.showMoreEvent];
   let width = colWidth * span - PADDING * 2;
   let leftPosition = colWidth * left + PADDING;

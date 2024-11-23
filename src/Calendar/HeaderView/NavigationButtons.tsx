@@ -1,5 +1,5 @@
 import { Moment } from "moment";
-import css from "./Calendar.module.scss";
+import css from "./headerView.module.scss";
 
 interface NavigationButtonsProps {
   currentDate: Moment;

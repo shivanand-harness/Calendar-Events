@@ -1,10 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
 import moment, { Moment } from "moment";
-import DayView from "./DayView";
-import WeekView from "./WeekView";
-import MonthView from "./MonthView";
-import NavigationButtons from "./NavigationButtons";
-import ViewSelector from "./ViewSelector";
+import DayView from "./Views/DayView";
+import WeekView from "./Views/WeekView";
+import MonthView from "./Views/MonthView";
+import NavigationButtons from "./HeaderView/NavigationButtons";
+import ViewSelector from "./HeaderView/ViewSelector";
 import { updateMomentStarOfWeekConfig } from "./utils";
 import { EventSpec, View, WEEK } from "./types";
 
@@ -12,17 +12,17 @@ import css from "./Calendar.module.scss";
 
 interface CalendarProps<T> {
   events: Array<EventSpec<T>>;
-  defaultView?: View
-  startOfWeek?: WEEK
-  allowedViews?: Array<View>
-  showAllEvents?: boolean
+  defaultView?: View;
+  startOfWeek?: WEEK;
+  allowedViews?: Array<View>;
 }
 
 export default function Calendar<T>(props: CalendarProps<T>) {
-  const { events, defaultView, startOfWeek = WEEK.SUN, allowedViews, showAllEvents } = props
+  const { events, defaultView, startOfWeek = WEEK.SUN, allowedViews } = props;
   const [currentDate, setCurrentDate] = useState<Moment>(moment());
   const [initialised, setInitialised] = useState(false);
   const [activeView, setActiveView] = useState(defaultView ?? View.MONTH);
+  const [showAllEvents, setShowAllEvents] = useState(false);
 
   const getChangeUnit = () => {
     switch (activeView) {
@@ -56,7 +56,6 @@ export default function Calendar<T>(props: CalendarProps<T>) {
     };
   }, [startOfWeek]);
 
-
   if (!initialised) return <></>;
 
   return (
@@ -66,20 +65,42 @@ export default function Calendar<T>(props: CalendarProps<T>) {
           currentDate={currentDate}
           onChange={handleChangeCurrentDate}
         />
-        <ViewSelector
-          allowedViews={allowedViews}
-          onChange={handleChangeActiveView}
-          activeView={activeView}
-        />
+        <div className={css.rightActionWrapper}>
+          <label className={css.checkbox}>
+            <input
+              type="checkbox"
+              value="SHOW_ALL_EVENTS"
+              onChange={(evt) => {
+                setShowAllEvents(evt.target.checked);
+              }}
+            />
+            <span>Show all events</span>
+          </label>
+          <ViewSelector
+            allowedViews={allowedViews}
+            onChange={handleChangeActiveView}
+            activeView={activeView}
+          />
+        </div>
       </div>
       {activeView === View.DAY && (
         <DayView currentDate={currentDate} events={events} />
       )}
       {activeView === View.WEEK && (
-        <WeekView startOfWeek={startOfWeek} currentDate={currentDate} events={events} showAllEvents={showAllEvents} />
+        <WeekView
+          startOfWeek={startOfWeek}
+          currentDate={currentDate}
+          events={events}
+          showAllEvents={showAllEvents}
+        />
       )}
       {activeView === View.MONTH && (
-        <MonthView startOfWeek={startOfWeek} currentDate={currentDate} events={events} showAllEvents={showAllEvents} />
+        <MonthView
+          startOfWeek={startOfWeek}
+          currentDate={currentDate}
+          events={events}
+          showAllEvents={showAllEvents}
+        />
       )}
     </div>
   );
