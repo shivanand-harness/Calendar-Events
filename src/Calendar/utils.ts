@@ -15,7 +15,10 @@ export const updateMomentStarOfWeekConfig = (startOfWeekDay: number) => {
 
 export const generateMonthViewHeaders = (startOfWeekDay: number) => {
   const weekdays = moment.weekdaysShort(); // ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-  return [...weekdays.slice(startOfWeekDay), ...weekdays.slice(0, startOfWeekDay)]; // Move 'Sun' to the end
+  return [
+    ...weekdays.slice(startOfWeekDay),
+    ...weekdays.slice(0, startOfWeekDay),
+  ]; // Move 'Sun' to the end
 };
 
 export const generateMonthView = (currentDate: Moment) => {
@@ -75,16 +78,21 @@ export function getEventsByRow<T>(
   return getEventsByRow(pendingItems, result);
 }
 
+interface GetEventsRowByStartDateAndEndDateSpec<T> {
+  calendarRowEvents: Array<Array<CalendarEventSpec<T>>>
+  eventsGroupByDate: Array<Array<CalendarEventSpec<T>>>
+}
+
 export function getEventsRowByStartDateAndEndDate<T>(
   events: Array<EventSpec<T>>,
   startDate: Moment,
   endDate: Moment
-): Array<Array<CalendarEventSpec<T>>> {
+): GetEventsRowByStartDateAndEndDateSpec<T> {
   const filteredTransformedEvents = events
     .filter((each) => {
       return (
-        startDate.isBetween(each.startDate, each.endDate, 'day', "[]") ||
-        each.startDate.isBetween(startDate, endDate, 'day', "[]")
+        startDate.isBetween(each.startDate, each.endDate, "day", "[]") ||
+        each.startDate.isBetween(startDate, endDate, "day", "[]")
       );
     })
     .map((each) => {
@@ -127,7 +135,21 @@ export function getEventsRowByStartDateAndEndDate<T>(
       if (s1 < s2) return 1;
       return 0;
     });
-  return getEventsByRow(filteredTransformedEvents);
+
+  const date = startDate.clone();
+  const eventsGroupByDate: Array<Array<CalendarEventSpec<T>>> = [];
+  while (date.clone().startOf('day').isBefore(endDate.endOf('day'))) {
+    eventsGroupByDate.push(
+      filteredTransformedEvents.filter((each) =>
+        date.isBetween(each.startDate, each.endDate, "day", "[]")
+      )
+    );
+    date.add(1, "days");
+  }
+  return {
+    calendarRowEvents: getEventsByRow(filteredTransformedEvents),
+    eventsGroupByDate,
+  };
 }
 
 export function getChunkArray<T>(

@@ -6,6 +6,7 @@ import { CalendarEventSpec } from "./types";
 
 interface TableRowWithEventsProps<T> {
     eventRows: Array<Array<CalendarEventSpec<T>>>
+    eventsGroupByDate: Array<Array<CalendarEventSpec<T>>>
     numberOfCols?: number
     showAllEvents?: boolean
 }
@@ -13,7 +14,7 @@ interface TableRowWithEventsProps<T> {
 export default function TableRowWithEvents<T>(
   props: PropsWithChildren<TableRowWithEventsProps<T>>
 ) {
-  const { children, eventRows, numberOfCols = 7, showAllEvents } = props;
+  const { children, eventRows, numberOfCols = 7, showAllEvents, eventsGroupByDate } = props;
   const [rowWidth, setRowWidth] = useState(0);
   const [rowHeight, setRowHeight] = useState(0);
   const rowRef = useRef<any>();
@@ -33,6 +34,7 @@ export default function TableRowWithEvents<T>(
         colHeight={rowHeight}
         colWidth={rowWidth / numberOfCols}
         showAllEvents={showAllEvents}
+        eventsGroupByDate={eventsGroupByDate}
       />
     </div>
   );

@@ -1,7 +1,7 @@
 import { CalendarEventSpec } from "./types";
 
 import styles from "./Calendar.module.scss";
-import { EVENT_HEIGHT, PADDING } from "./constants";
+import { DEFAULT_TOP_PADDING, EVENT_HEIGHT, PADDING } from "./constants";
 
 interface EventProps<T> {
   event: CalendarEventSpec<T>;
@@ -17,7 +17,7 @@ export default function Event<T>(props: EventProps<T>) {
   const { name } = eventInfo as any;
 
   const classes = [styles.event];
-  const top = rowIndex * (EVENT_HEIGHT + PADDING) + PADDING + EVENT_HEIGHT;
+  const top = rowIndex * (EVENT_HEIGHT + PADDING) + PADDING + DEFAULT_TOP_PADDING;
   let width = colWidth * span - PADDING * 2;
   let leftPosition = colWidth * left + PADDING;
   if (startDateOverLapping) {

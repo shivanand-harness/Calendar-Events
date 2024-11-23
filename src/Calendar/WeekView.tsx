@@ -24,7 +24,7 @@ export default function WeekView<T>(props: WeekViewProps<T>) {
   const weekArr = useMemo(() => generateWeekView(currentDate), [currentDate]);
   const headers = generateMonthViewHeaders(startOfWeek);
 
-  const eventRows = useMemo(() => {
+  const { calendarRowEvents, eventsGroupByDate } = useMemo(() => {
     return getEventsRowByStartDateAndEndDate(
       events,
       weekArr[0].date,
@@ -40,7 +40,7 @@ export default function WeekView<T>(props: WeekViewProps<T>) {
           <div className={classNames(css.tableCol, css.headerCol)}>{each}</div>
         ))}
       </div>
-      <TableRowWithEvents eventRows={eventRows} showAllEvents={showAllEvents}>
+      <TableRowWithEvents eventRows={calendarRowEvents} eventsGroupByDate={eventsGroupByDate} showAllEvents={showAllEvents}>
         {weekArr.map((col, colIdx) => (
           <div key={colIdx} className={classNames(css.tableCol)}>
             {col.date.format("D")}

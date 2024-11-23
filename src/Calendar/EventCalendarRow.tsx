@@ -1,5 +1,11 @@
-import { DEFAULT_TOP_PADDING, EVENT_HEIGHT, PADDING } from "./constants";
+import {
+  DEFAULT_BOTTOM_PADDING,
+  DEFAULT_TOP_PADDING,
+  EVENT_HEIGHT,
+  PADDING,
+} from "./constants";
 import Event from "./Event";
+import ShowMoreEvent from "./ShowMoreRow";
 import { CalendarEventSpec } from "./types";
 
 interface EventsRowProps<T> {
@@ -21,21 +27,23 @@ function EventsRow<T>(props: EventsRowProps<T>) {
 
 interface EventCalendarRowProps<T> {
   eventRows: Array<Array<CalendarEventSpec<T>>>;
+  eventsGroupByDate: Array<Array<CalendarEventSpec<T>>>;
   colWidth: number;
   colHeight: number;
   showAllEvents?: boolean;
 }
 
 export default function EventCalendarRow<T>(props: EventCalendarRowProps<T>) {
-  const { eventRows, colWidth, colHeight, showAllEvents } = props;
+  const { eventRows, colWidth, colHeight, showAllEvents, eventsGroupByDate } =
+    props;
   const allowedEventRowToShow = Math.floor(
-    (colHeight - DEFAULT_TOP_PADDING) / (EVENT_HEIGHT + PADDING)
+    (colHeight - DEFAULT_TOP_PADDING - DEFAULT_BOTTOM_PADDING) /
+      (EVENT_HEIGHT + PADDING)
   );
-  console.log(allowedEventRowToShow)
+
   const slicedRows = showAllEvents
     ? eventRows
     : eventRows.slice(0, allowedEventRowToShow);
-  
 
   return (
     <>
@@ -46,6 +54,15 @@ export default function EventCalendarRow<T>(props: EventCalendarRowProps<T>) {
           rowIndex={idx}
           colWidth={colWidth}
           colHeight={colHeight}
+        />
+      ))}
+      {eventsGroupByDate.map((each, idx) => (
+        <ShowMoreEvent
+          colWidth={colWidth}
+          list={each}
+          span={1}
+          left={idx}
+          allowedNumberOfRows={allowedEventRowToShow}
         />
       ))}
     </>

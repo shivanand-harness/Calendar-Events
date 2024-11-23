@@ -103,6 +103,14 @@
   border-bottom-right-radius: 0px;
 }
 
+.showMoreEvent {
+  position: absolute;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 12px;
+}
+
 .container {
   height: 100%;
   display: grid;
