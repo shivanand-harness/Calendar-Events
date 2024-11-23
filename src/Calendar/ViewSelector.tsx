@@ -21,6 +21,7 @@ export default function ViewSelector(props: ViewSelectorProps) {
         return true
       }).map((each) => (
         <button
+          key={each.value}
           className={classNames({
             [css.active]: props.activeView === each.value,
           })}

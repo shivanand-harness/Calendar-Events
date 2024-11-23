@@ -31,9 +31,10 @@ export default function EventCalendarRow<T>(props: EventCalendarRowProps<T>) {
   const allowedEventRowToShow = Math.floor(
     (colHeight - DEFAULT_TOP_PADDING) / (EVENT_HEIGHT + PADDING)
   );
+  console.log(allowedEventRowToShow)
   const slicedRows = showAllEvents
     ? eventRows
-    : eventRows.slice(0, allowedEventRowToShow - 1);
+    : eventRows.slice(0, allowedEventRowToShow);
   
 
   return (

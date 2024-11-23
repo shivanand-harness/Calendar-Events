@@ -27,10 +27,10 @@ export default function DayView<T>(props: DayViewProps<T>) {
     setColHeight(colRef.current.offsetHeight);
   }, []);
   return (
-    <div className={css.dayViewCalendarWrapper}>
+    <div className={classNames(css.calendarWrapper, css.dayViewCalendarWrapper)}>
       <div className={classNames(css.tableRow, css.tableHeaderRow)}>
         <div className={classNames(css.tableCol, css.headerCol)}>
-          <span>{currentDate.format("ddd")}</span>
+          <span>{currentDate.format("ddd")}</span> &nbsp;
           <span>{currentDate.format("D MMM YY")}</span>
         </div>
       </div>

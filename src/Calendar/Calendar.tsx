@@ -60,7 +60,7 @@ export default function Calendar<T>(props: CalendarProps<T>) {
   if (!initialised) return <></>;
 
   return (
-    <div>
+    <div className={css.container}>
       <div className={css.actionsWrapper}>
         <NavigationButtons
           currentDate={currentDate}

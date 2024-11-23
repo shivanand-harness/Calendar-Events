@@ -31,10 +31,10 @@ export default function MonthView<T>(props: MonthViewProps<T>) {
     );
   }, [events, monthArr]);
   return (
-    <div className={css.monthViewCalendarWrapper}>
+    <div className={classNames(css.calendarWrapper, css.monthViewCalendarWrapper)}>
       <div className={classNames(css.tableRow, css.tableHeaderRow)}>
         {headers.map((each) => (
-          <div className={classNames(css.tableCol, css.headerCol)}>{each}</div>
+          <div key={each} className={classNames(css.tableCol, css.headerCol)}>{each}</div>
         ))}
       </div>
       {chunkArray.map((cols, rowIdx) => (

@@ -34,7 +34,7 @@ export default function WeekView<T>(props: WeekViewProps<T>) {
 
 
   return (
-    <div className={css.weekViewCalendarWrapper}>
+    <div className={classNames(css.calendarWrapper, css.weekViewCalendarWrapper)}>
       <div className={classNames(css.tableRow, css.tableHeaderRow)}>
         {headers.map((each) => (
           <div className={classNames(css.tableCol, css.headerCol)}>{each}</div>

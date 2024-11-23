@@ -2,21 +2,36 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0px;
 }
 
 .monthViewCalendarWrapper {
+  --calendar-columns: 7;
+}
+
+.weekViewCalendarWrapper {
+  --calendar-columns: 7;
+}
+
+.dayViewCalendarWrapper {
+  --calendar-columns: 1;
+}
+
+.calendarWrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   border-top: 1px solid black;
   border-left: 1px solid black;
   & > .tableRow {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    min-height: 100px;
+    grid-template-columns: repeat(var(--calendar-columns), 1fr);
+    flex: 1;
     position: relative;
   }
 
   & .tableHeaderRow {
-    height: 40px;
+    height: max-content;
+    flex: none;
     min-height: unset;
   }
 
@@ -34,68 +49,6 @@
   & .headerCol {
     text-align: center;
     font-weight: 800;
-  }
-}
-
-.weekViewCalendarWrapper {
-  border-top: 1px solid black;
-  border-left: 1px solid black;
-  & > .tableRow {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    min-height: 200px;
-    position: relative;
-  }
-
-  & .tableCol {
-    border-bottom: 1px solid black;
-    border-right: 1px solid black;
-    text-align: right;
-    padding: 10px;
-  }
-
-  & .tableHeaderRow {
-    height: 40px;
-    min-height: unset;
-  }
-
-  & .headerCol {
-    text-align: center;
-    font-weight: 800;
-  }
-}
-
-.dayViewCalendarWrapper {
-  border-top: 1px solid black;
-  border-left: 1px solid black;
-  min-height: 700px;
-  display: grid;
-  grid-template-rows: max-content 1fr;
-
-  & > .tableRow {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    position: relative;
-  }
-
-  & .tableCol {
-    border-bottom: 1px solid black;
-    border-right: 1px solid black;
-    text-align: right;
-    padding: 10px;
-  }
-
-  & .tableHeaderRow {
-    text-align: center;
-    font-weight: 800;
-  }
-
-  & .headerCol {
-    text-align: center;
-    font-weight: 800;
-    display: flex;
-    gap: 10px;
-    justify-content: center;
   }
 }
 
@@ -137,6 +90,7 @@
   justify-content: center;
   align-items: center;
   color: #fff;
+  font-size: 12px;
 }
 
 .start_overlapping {
@@ -147,4 +101,11 @@
 .end_overlapping {
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
+}
+
+.container {
+  height: 100%;
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  gap: 10px;
 }
