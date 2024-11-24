@@ -1,12 +1,42 @@
 import { Moment } from "moment";
 import CalendarView from "./CalendarView";
 import css from "./Views.module.scss";
-import { EventSpec } from "../types";
+import { EventSpec, QuaterViewMonthConfig } from "../types";
 import {
   getCalendarRowsForMultiMonthView,
   getEventsRowByStartDateAndEndDate,
 } from "../utils";
 import CalendarRowEventView from "../EventViews/CalendarRowEventView";
+
+interface MonthRowProps<T> {
+  events: Array<EventSpec<T>>;
+  monthConfig: QuaterViewMonthConfig;
+  headers: Array<number>;
+}
+
+function MonthRow<T>(props: MonthRowProps<T>) {
+  const { events, monthConfig, headers } = props;
+  const { month, startDate, endDate } = monthConfig;
+  const eventRows = getEventsRowByStartDateAndEndDate(
+    events,
+    startDate,
+    endDate
+  );
+  return (
+    <CalendarView.Row numberOfEventRows={eventRows.calendarRowEvents.length}>
+      <CalendarView.HeaderCol className={css.quaterViewHeaderCol}>
+        {month}
+      </CalendarView.HeaderCol>
+      {headers.slice(1).map((_each, idx) => (
+        <CalendarView.Col key={idx} />
+      ))}
+      <CalendarRowEventView
+        eventRows={eventRows.calendarRowEvents}
+        eventsGroupByDate={eventRows.eventsGroupByDate}
+      />
+    </CalendarView.Row>
+  );
+}
 
 interface QuaterViewProps<T> {
   currentDate: Moment;
@@ -34,27 +64,13 @@ export default function QuaterView<T>(props: QuaterViewProps<T>) {
       </CalendarView.HeaderRow>
 
       {calendarRows.map((each) => {
-        const eventRows = getEventsRowByStartDateAndEndDate(
-          events,
-          each.startDate,
-          each.endDate
-        );
         return (
-          <CalendarView.Row
+          <MonthRow
             key={each.month}
-            numberOfEventRows={eventRows.calendarRowEvents.length}
-          >
-            <CalendarView.HeaderCol className={css.quaterViewHeaderCol}>
-              {each.month}
-            </CalendarView.HeaderCol>
-            {headers.slice(1).map((_each, idx) => (
-              <CalendarView.Col key={idx} />
-            ))}
-            <CalendarRowEventView
-              eventRows={eventRows.calendarRowEvents}
-              eventsGroupByDate={eventRows.eventsGroupByDate}
-            />
-          </CalendarView.Row>
+            events={events}
+            monthConfig={each}
+            headers={headers}
+          />
         );
       })}
     </CalendarView>

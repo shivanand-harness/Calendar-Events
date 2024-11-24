@@ -60,7 +60,7 @@ function HeaderRow(props: PropsWithChildren<unknown>) {
 }
 
 interface HeaderColProps {
-    className?: string
+  className?: string;
 }
 
 function HeaderCol(props: PropsWithChildren<HeaderColProps>) {
@@ -91,19 +91,22 @@ function Col(props: PropsWithChildren<ColProps>) {
 interface RowContextSpec {
   rowHeight: number;
   rowWidth: number;
+  defaultTopPadding: number;
 }
 
 export const RowContext = createContext<RowContextSpec>({
   rowHeight: 0,
   rowWidth: 0,
+  defaultTopPadding: 0,
 });
 
 interface RowProps {
   numberOfEventRows: number;
+  defaultTopPadding?: number;
 }
 
 function Row(props: PropsWithChildren<RowProps>) {
-  const { children, numberOfEventRows } = props;
+  const { children, numberOfEventRows, defaultTopPadding = PADDING } = props;
   const [rowWidth, setRowWidth] = useState(0);
   const [rowHeight, setRowHeight] = useState(0);
   const rowRef = useRef<any>();
@@ -127,7 +130,7 @@ function Row(props: PropsWithChildren<RowProps>) {
       style={{ height: calculatedRowHeight }}
       ref={rowRef}
     >
-      <RowContext.Provider value={{ rowHeight, rowWidth }}>
+      <RowContext.Provider value={{ rowHeight, rowWidth, defaultTopPadding }}>
         {children}
       </RowContext.Provider>
     </div>

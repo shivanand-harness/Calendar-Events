@@ -13,6 +13,7 @@ import {
 } from "../utils";
 
 import css from "./Views.module.scss";
+import { DEFAULT_TOP_PADDING } from "../constants";
 
 interface MonthViewProps<T> {
   currentDate: Moment;
@@ -47,6 +48,7 @@ export default function MonthView<T>(props: MonthViewProps<T>) {
         <CalendarView.Row
           key={rowIdx}
           numberOfEventRows={eventRows[rowIdx].calendarRowEvents.length}
+          defaultTopPadding={DEFAULT_TOP_PADDING}
         >
           {cols.map((col, colIdx) => (
             <CalendarView.Col key={colIdx} isCurrentMonth={col.isCurrentMonth}>

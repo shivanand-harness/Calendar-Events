@@ -4,9 +4,6 @@ import EventView from "./EventView";
 interface EventsRowProps<T> {
   events: Array<CalendarEventSpec<T>>;
   rowIndex: number;
-  colHeight: number;
-  colWidth: number;
-  numberOfHeaderCols: number
 }
 
 export default function EventsRowView<T>(props: EventsRowProps<T>) {

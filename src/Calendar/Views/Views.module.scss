@@ -15,6 +15,13 @@
   --calendar-column-width: 150px;
   width: 100%;
   overflow: auto;
+
+  & .quaterViewHeaderCol {
+    background-color: #f3f3fa;
+    position: sticky;
+    left: 0px;
+    z-index: 10;
+  }
 }
 
 .calendarView {
@@ -44,6 +51,11 @@
     flex: none;
     min-height: unset;
     min-width: min-content;
+
+    position: sticky;
+    top: 0px;
+    background: white;
+    z-index: 11;
   }
 
   & .tableCol {
@@ -62,11 +74,4 @@
     text-align: center;
     font-weight: 800;
   }
-}
-
-.quaterViewHeaderCol {
-    background-color: #F3F3FA;
-    position: sticky;
-    left: 0px;
-    z-index: 10;
 }

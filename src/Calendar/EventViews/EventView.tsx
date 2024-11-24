@@ -1,19 +1,18 @@
 import { CalendarEventSpec } from "../types";
 
 import styles from "./EventViews.module.scss";
-import { DEFAULT_TOP_PADDING, EVENT_HEIGHT, PADDING } from "../constants";
+import { EVENT_HEIGHT, PADDING } from "../constants";
 import classNames from "classnames";
+import { useContext } from "react";
+import { CalendarViewContext, RowContext } from "../Views/CalendarView";
 
 interface EventViewProps<T> {
   event: CalendarEventSpec<T>;
   rowIndex: number;
-  colHeight: number;
-  colWidth: number;
-  numberOfHeaderCols: number;
 }
 
 export default function EventView<T>(props: EventViewProps<T>) {
-  const { event, rowIndex, colWidth, numberOfHeaderCols } = props;
+  const { event, rowIndex } = props;
   const {
     eventInfo = {},
     span,
@@ -23,8 +22,15 @@ export default function EventView<T>(props: EventViewProps<T>) {
   } = event;
   const { name, backgroundColor, color } = eventInfo as any;
 
-  const top = rowIndex * (EVENT_HEIGHT + PADDING) + DEFAULT_TOP_PADDING;
+  const { numberOfCols, numberOfHeaderCols } = useContext(CalendarViewContext);
+  const { defaultTopPadding, rowWidth } = useContext(RowContext);
+  const colWidth = rowWidth / numberOfCols;
+
+  // top = row index * (each event height + gap between events) + default top padding for date number to show
+  const top = rowIndex * (EVENT_HEIGHT + PADDING) + defaultTopPadding;
+  // width = col width * number of days the event is spanned - horizontal padding * 2 side
   let width = colWidth * span - PADDING * 2;
+  // left position = col width * (number of columns to left + number of header cols if any) + horizontal padding to left
   let leftPosition = colWidth * (left + numberOfHeaderCols) + PADDING;
 
   return (

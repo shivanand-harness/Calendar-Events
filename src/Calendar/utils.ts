@@ -1,5 +1,5 @@
 import moment, { Moment } from "moment";
-import { CalendarEventSpec, EventSpec } from "./types";
+import { CalendarEventSpec, EventSpec, QuaterViewMonthConfig } from "./types";
 
 const startOfWeek = (date: Moment) => date.clone().startOf("week");
 
@@ -78,6 +78,24 @@ export function getEventsByRow<T>(
   return getEventsByRow(pendingItems, result);
 }
 
+export function getEventsGroupByDate<T>(
+  events: Array<CalendarEventSpec<T>>,
+  startDate: Moment,
+  endDate: Moment
+) {
+  const date = startDate.clone();
+  const eventsGroupByDate: Array<Array<CalendarEventSpec<T>>> = [];
+  while (date.clone().startOf("day").isBefore(endDate.endOf("day"))) {
+    eventsGroupByDate.push(
+      events.filter((each) =>
+        date.isBetween(each.startDate, each.endDate, "day", "[]")
+      )
+    );
+    date.add(1, "days");
+  }
+  return eventsGroupByDate;
+}
+
 interface GetEventsRowByStartDateAndEndDateSpec<T> {
   calendarRowEvents: Array<Array<CalendarEventSpec<T>>>;
   eventsGroupByDate: Array<Array<CalendarEventSpec<T>>>;
@@ -86,7 +104,7 @@ interface GetEventsRowByStartDateAndEndDateSpec<T> {
 export function getEventsRowByStartDateAndEndDate<T>(
   events: Array<EventSpec<T>>,
   startDate: Moment,
-  endDate: Moment,
+  endDate: Moment
 ): GetEventsRowByStartDateAndEndDateSpec<T> {
   const filteredTransformedEvents = events
     .filter((each) => {
@@ -136,19 +154,13 @@ export function getEventsRowByStartDateAndEndDate<T>(
       return 0;
     });
 
-  const date = startDate.clone();
-  const eventsGroupByDate: Array<Array<CalendarEventSpec<T>>> = [];
-  while (date.clone().startOf("day").isBefore(endDate.endOf("day"))) {
-    eventsGroupByDate.push(
-      filteredTransformedEvents.filter((each) =>
-        date.isBetween(each.startDate, each.endDate, "day", "[]")
-      )
-    );
-    date.add(1, "days");
-  }
   return {
     calendarRowEvents: getEventsByRow(filteredTransformedEvents),
-    eventsGroupByDate,
+    eventsGroupByDate: getEventsGroupByDate(
+      filteredTransformedEvents,
+      startDate,
+      endDate
+    ),
   };
 }
 
@@ -166,7 +178,7 @@ export function getChunkArray<T>(
 export function getCalendarRowsForMultiMonthView(
   currentDate: Moment,
   numberOfMonths = 3
-) {
+): Array<QuaterViewMonthConfig> {
   const list = [];
   for (let i = 0; i < numberOfMonths; i++) {
     const date = currentDate.clone().add(i, "months");

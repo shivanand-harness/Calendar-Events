@@ -44,3 +44,9 @@ export interface CalendarEventSpec<T> extends EventSpec<T> {
   endDateOverLapping: boolean;
   left: number;
 }
+
+export interface QuaterViewMonthConfig {
+  month: string;
+  startDate: Moment;
+  endDate: Moment;
+}
