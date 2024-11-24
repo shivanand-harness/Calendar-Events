@@ -113,9 +113,17 @@ function Row(props: PropsWithChildren<RowProps>) {
 
   const { showAllEvents } = useContext(CalendarViewContext);
 
-  useEffect(() => {
+  const handleUpdateDiamensions = () => {
     setRowWidth(rowRef.current.scrollWidth);
     setRowHeight(rowRef.current.offsetHeight);
+  };
+
+  useEffect(() => {
+    handleUpdateDiamensions()
+    window.addEventListener("resize", handleUpdateDiamensions);
+    return () => {
+      window.removeEventListener("resize", handleUpdateDiamensions);
+    };
   }, []);
 
   const calculatedRowHeight = showAllEvents
