@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { EVENT_HEIGHT, PADDING } from "../constants";
 import { CalendarEventSpec } from "../types";
-import styles from "./EventViews.module.scss";
+import { EVENT_HEIGHT, PADDING } from "../constants";
 import { CalendarViewContext, RowContext } from "../Views/CalendarView";
+import styles from "./EventViews.module.scss";
 
 interface ShowMoreEventViewProps<T> {
   span: number;

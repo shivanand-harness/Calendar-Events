@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Moment } from "moment";
 import {
   generateWeekView,
@@ -5,11 +6,12 @@ import {
   getEventsRowByStartDateAndEndDate,
 } from "../utils";
 
-import css from "./Views.module.scss";
-import { useMemo } from "react";
-import { EventSpec, WEEK } from "../types";
 import CalendarView from "./CalendarView";
+import { EventSpec, WEEK } from "../types";
+import { DEFAULT_TOP_PADDING } from "../constants";
 import CalendarRowEventView from "../EventViews/CalendarRowEventView";
+
+import css from "./Views.module.scss";
 
 interface WeekViewProps<T> {
   currentDate: Moment;
@@ -42,7 +44,10 @@ export default function WeekView<T>(props: WeekViewProps<T>) {
           <CalendarView.HeaderCol key={each}>{each}</CalendarView.HeaderCol>
         ))}
       </CalendarView.HeaderRow>
-      <CalendarView.Row numberOfEventRows={calendarRowEvents.length}>
+      <CalendarView.Row
+        numberOfEventRows={calendarRowEvents.length}
+        defaultTopPadding={DEFAULT_TOP_PADDING}
+      >
         {weekArr.map((col, colIdx) => (
           <CalendarView.Col key={colIdx}>
             {col.date.format("D")}
