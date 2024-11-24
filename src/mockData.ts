@@ -22,7 +22,7 @@ export const MOCK_CALENDAR_EVENTS = [
       startDate: "02/11/2024",
       endDate: "02/11/2024",
       backgroundColor: "#FFDA03",
-      color: "#000",
+      color: "#383946",
     },
   },
   {
@@ -35,7 +35,7 @@ export const MOCK_CALENDAR_EVENTS = [
       startDate: "02/11/2024",
       endDate: "03/11/2024",
       backgroundColor: "#ADD8E6",
-      color: "#000",
+      color: "#383946",
     },
   },
   {
@@ -48,7 +48,7 @@ export const MOCK_CALENDAR_EVENTS = [
       startDate: "02/11/2024",
       endDate: "04/11/2024",
       backgroundColor: "#FFBA54",
-      color: "#000",
+      color: "#383946",
     },
   },
   {
@@ -61,7 +61,7 @@ export const MOCK_CALENDAR_EVENTS = [
       startDate: "03/11/2024",
       endDate: "03/11/2024",
       backgroundColor: "#9FAAE7",
-      color: "#000",
+      color: "#383946",
     },
   },
   {
@@ -74,7 +74,7 @@ export const MOCK_CALENDAR_EVENTS = [
       startDate: "03/11/2024",
       endDate: "03/11/2024",
       backgroundColor: "#F2C0BF",
-      color: "#000",
+      color: "#383946",
     },
   },
   {
@@ -87,7 +87,7 @@ export const MOCK_CALENDAR_EVENTS = [
       startDate: "03/11/2024",
       endDate: "03/11/2024",
       backgroundColor: "#D9DAE5",
-      color: "#000",
+      color: "#383946",
     },
   },
   {
@@ -113,7 +113,7 @@ export const MOCK_CALENDAR_EVENTS = [
       startDate: "29/11/2024",
       endDate: "01/12/2024",
       backgroundColor: "#ADD8E6",
-      color: "#000",
+      color: "#383946",
     },
   },
 ];
