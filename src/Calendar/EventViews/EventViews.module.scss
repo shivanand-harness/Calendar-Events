@@ -1,6 +1,6 @@
 .event {
   background-color: blue;
-  border-radius: 12px;
+  border-radius: 4px;
   position: absolute;
   height: 30px;
   top: 10px;
@@ -19,6 +19,24 @@
 .end_overlapping {
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
+}
+
+.overLapping {
+  position: absolute;
+  border-style: solid;
+  border-color: transparent;
+}
+
+.rightOverLapping {
+  right: -7px;
+  border-right-width: 0px;
+  border-left-color: blue;
+}
+
+.leftOverLapping {
+  left: -7px;
+  border-left-width: 0px;
+  border-right-color: blue;
 }
 
 .showMoreEvent {
