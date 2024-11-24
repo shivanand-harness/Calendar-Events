@@ -6,18 +6,28 @@ interface ShowMoreEventViewProps<T> {
   span: number;
   left: number;
   list: Array<CalendarEventSpec<T>>;
-  colWidth: number
+  colWidth: number;
   allowedNumberOfRows: number;
   showAllEvents: boolean;
+  numberOfHeaderCols: number;
 }
 
 export default function ShowMoreEventView<T>(props: ShowMoreEventViewProps<T>) {
-  const { span, left, list, allowedNumberOfRows, colWidth, showAllEvents } = props;
+  const {
+    span,
+    left,
+    list,
+    allowedNumberOfRows,
+    colWidth,
+    showAllEvents,
+    numberOfHeaderCols,
+  } = props;
   if (list.length <= allowedNumberOfRows || showAllEvents) return <></>;
   const classes = [styles.showMoreEvent];
   let width = colWidth * span - PADDING * 2;
-  let leftPosition = colWidth * left + PADDING;
-  const top = (allowedNumberOfRows) * (EVENT_HEIGHT + PADDING) + PADDING + DEFAULT_TOP_PADDING;
+  let leftPosition = colWidth * (left + numberOfHeaderCols) + PADDING;
+  const top =
+    allowedNumberOfRows * (EVENT_HEIGHT + PADDING) + DEFAULT_TOP_PADDING;
   return (
     <div
       style={{

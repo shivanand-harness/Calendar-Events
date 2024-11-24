@@ -79,14 +79,14 @@ export function getEventsByRow<T>(
 }
 
 interface GetEventsRowByStartDateAndEndDateSpec<T> {
-  calendarRowEvents: Array<Array<CalendarEventSpec<T>>>
-  eventsGroupByDate: Array<Array<CalendarEventSpec<T>>>
+  calendarRowEvents: Array<Array<CalendarEventSpec<T>>>;
+  eventsGroupByDate: Array<Array<CalendarEventSpec<T>>>;
 }
 
 export function getEventsRowByStartDateAndEndDate<T>(
   events: Array<EventSpec<T>>,
   startDate: Moment,
-  endDate: Moment
+  endDate: Moment,
 ): GetEventsRowByStartDateAndEndDateSpec<T> {
   const filteredTransformedEvents = events
     .filter((each) => {
@@ -138,7 +138,7 @@ export function getEventsRowByStartDateAndEndDate<T>(
 
   const date = startDate.clone();
   const eventsGroupByDate: Array<Array<CalendarEventSpec<T>>> = [];
-  while (date.clone().startOf('day').isBefore(endDate.endOf('day'))) {
+  while (date.clone().startOf("day").isBefore(endDate.endOf("day"))) {
     eventsGroupByDate.push(
       filteredTransformedEvents.filter((each) =>
         date.isBetween(each.startDate, each.endDate, "day", "[]")
@@ -161,4 +161,20 @@ export function getChunkArray<T>(
     result.push(array.slice(i, i + chunkSize));
   }
   return result;
+}
+
+export function getCalendarRowsForMultiMonthView(
+  currentDate: Moment,
+  numberOfMonths = 3
+) {
+  const list = [];
+  for (let i = 0; i < numberOfMonths; i++) {
+    const date = currentDate.clone().add(i, "months");
+    list.push({
+      month: date.format("MMMM"),
+      startDate: date.clone().startOf("month"),
+      endDate: date.clone().endOf("month"),
+    });
+  }
+  return list;
 }

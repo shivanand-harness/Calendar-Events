@@ -22,7 +22,8 @@ export default function CalendarRowEventView<T>(
   props: CalendarRowEventViewProps<T>
 ) {
   const { eventRows, eventsGroupByDate } = props;
-  const { numberOfCols, showAllEvents } = useContext(CalendarViewContext);
+  const { numberOfCols, showAllEvents, numberOfHeaderCols } =
+    useContext(CalendarViewContext);
   const { rowHeight, rowWidth } = useContext(RowContext);
   const colHeight = rowHeight;
   const colWidth = rowWidth / numberOfCols;
@@ -45,6 +46,7 @@ export default function CalendarRowEventView<T>(
           rowIndex={idx}
           colWidth={colWidth}
           colHeight={colHeight}
+          numberOfHeaderCols={numberOfHeaderCols}
         />
       ))}
       {eventsGroupByDate.map((each, idx) => (
@@ -56,6 +58,7 @@ export default function CalendarRowEventView<T>(
           left={idx}
           allowedNumberOfRows={allowedEventRowsToShow}
           showAllEvents={showAllEvents}
+          numberOfHeaderCols={numberOfHeaderCols}
         />
       ))}
     </>

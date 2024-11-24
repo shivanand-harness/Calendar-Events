@@ -9,10 +9,11 @@ interface EventViewProps<T> {
   rowIndex: number;
   colHeight: number;
   colWidth: number;
+  numberOfHeaderCols: number;
 }
 
 export default function EventView<T>(props: EventViewProps<T>) {
-  const { event, rowIndex, colWidth } = props;
+  const { event, rowIndex, colWidth, numberOfHeaderCols } = props;
   const {
     eventInfo = {},
     span,
@@ -24,7 +25,7 @@ export default function EventView<T>(props: EventViewProps<T>) {
 
   const top = rowIndex * (EVENT_HEIGHT + PADDING) + DEFAULT_TOP_PADDING;
   let width = colWidth * span - PADDING * 2;
-  let leftPosition = colWidth * left + PADDING;
+  let leftPosition = colWidth * (left + numberOfHeaderCols) + PADDING;
 
   return (
     <>

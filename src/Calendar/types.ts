@@ -29,6 +29,7 @@ export enum View {
   MONTH = "MONTH",
   WEEK = "WEEK",
   DAY = "DAY",
+  QUATER = "QUATER",
 }
 
 export interface EventSpec<T> {

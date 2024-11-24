@@ -23,7 +23,7 @@ export default function App() {
         events={events}
         defaultView={View.MONTH}
         startOfWeek={WEEK.MON}
-        allowedViews={[View.MONTH, View.WEEK, View.DAY]}
+        allowedViews={[View.MONTH, View.WEEK, View.DAY, View.QUATER]}
       />
     </div>
   );

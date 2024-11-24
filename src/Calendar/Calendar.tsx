@@ -9,6 +9,7 @@ import { updateMomentStarOfWeekConfig } from "./utils";
 import { EventSpec, View, WEEK } from "./types";
 
 import css from "./Calendar.module.scss";
+import QuaterView from "./Views/QuaterView";
 
 interface CalendarProps<T> {
   events: Array<EventSpec<T>>;
@@ -97,6 +98,13 @@ export default function Calendar<T>(props: CalendarProps<T>) {
       {activeView === View.MONTH && (
         <MonthView
           startOfWeek={startOfWeek}
+          currentDate={currentDate}
+          events={events}
+          showAllEvents={showAllEvents}
+        />
+      )}
+      {activeView === View.QUATER && (
+        <QuaterView
           currentDate={currentDate}
           events={events}
           showAllEvents={showAllEvents}

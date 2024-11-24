@@ -14,26 +14,37 @@ import { EVENT_HEIGHT, PADDING } from "../constants";
 interface CalendarViewContextSpec {
   showAllEvents: boolean;
   numberOfCols: number;
+  numberOfHeaderCols: number;
 }
 
 export const CalendarViewContext = createContext<CalendarViewContextSpec>({
   showAllEvents: false,
   numberOfCols: 0,
+  numberOfHeaderCols: 0,
 });
 
 interface CalendarViewProps {
   className?: string;
   showAllEvents: boolean;
   numberOfCols: number;
+  numberOfHeaderCols?: number;
 }
 
 export default function CalendarView(
   props: PropsWithChildren<CalendarViewProps>
 ) {
-  const { className, children, showAllEvents, numberOfCols } = props;
+  const {
+    className,
+    children,
+    showAllEvents,
+    numberOfCols,
+    numberOfHeaderCols = 0,
+  } = props;
   return (
     <div className={classNames(css.calendarView, className)}>
-      <CalendarViewContext.Provider value={{ showAllEvents, numberOfCols }}>
+      <CalendarViewContext.Provider
+        value={{ showAllEvents, numberOfCols, numberOfHeaderCols }}
+      >
         {children}
       </CalendarViewContext.Provider>
     </div>
@@ -48,9 +59,13 @@ function HeaderRow(props: PropsWithChildren<unknown>) {
   );
 }
 
-function HeaderCol(props: PropsWithChildren<unknown>) {
+interface HeaderColProps {
+    className?: string
+}
+
+function HeaderCol(props: PropsWithChildren<HeaderColProps>) {
   return (
-    <div className={classNames(css.tableCol, css.headerCol)}>
+    <div className={classNames(css.tableCol, css.headerCol, props.className)}>
       {props.children}
     </div>
   );
@@ -96,7 +111,7 @@ function Row(props: PropsWithChildren<RowProps>) {
   const { showAllEvents } = useContext(CalendarViewContext);
 
   useEffect(() => {
-    setRowWidth(rowRef.current.offsetWidth);
+    setRowWidth(rowRef.current.scrollWidth);
     setRowHeight(rowRef.current.offsetHeight);
   }, []);
 

@@ -10,17 +10,28 @@
   --calendar-columns: 1;
 }
 
+.quaterViewCalendarWrapper {
+  --calendar-columns: 32;
+  --calendar-column-width: 150px;
+  width: 100%;
+  overflow: auto;
+}
+
 .calendarView {
   height: 100%;
   display: flex;
   flex-direction: column;
-  border-top: 1px solid #D9DAE5;
-  border-left: 1px solid #D9DAE5;
+  border-top: 1px solid #d9dae5;
+  border-left: 1px solid #d9dae5;
   & .tableRow {
     display: grid;
-    grid-template-columns: repeat(var(--calendar-columns), 1fr);
+    grid-template-columns: repeat(
+      var(--calendar-columns),
+      var(--calendar-column-width, 1fr)
+    );
     flex: 1;
     position: relative;
+    min-width: min-content;
   }
 
   & .tableRow.showAllEvents {
@@ -32,11 +43,12 @@
     height: max-content;
     flex: none;
     min-height: unset;
+    min-width: min-content;
   }
 
   & .tableCol {
-    border-bottom: 1px solid #D9DAE5;
-    border-right: 1px solid #D9DAE5;
+    border-bottom: 1px solid #d9dae5;
+    border-right: 1px solid #d9dae5;
     text-align: right;
     padding: 10px;
     color: #383946;
@@ -50,4 +62,11 @@
     text-align: center;
     font-weight: 800;
   }
+}
+
+.quaterViewHeaderCol {
+    background-color: #F3F3FA;
+    position: sticky;
+    left: 0px;
+    z-index: 10;
 }
