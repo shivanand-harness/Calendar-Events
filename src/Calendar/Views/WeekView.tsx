@@ -40,18 +40,15 @@ export default function WeekView<T>(props: WeekViewProps<T>) {
       numberOfCols={7}
     >
       <CalendarView.HeaderRow>
-        {headers.map((each) => (
-          <CalendarView.HeaderCol key={each}>{each}</CalendarView.HeaderCol>
+        {headers.map((each, colIdx) => (
+          <CalendarView.HeaderCol key={each}>
+            {weekArr[colIdx].date.format("ddd DD MMM")}
+          </CalendarView.HeaderCol>
         ))}
       </CalendarView.HeaderRow>
-      <CalendarView.Row
-        numberOfEventRows={calendarRowEvents.length}
-        defaultTopPadding={DEFAULT_TOP_PADDING}
-      >
-        {weekArr.map((col, colIdx) => (
-          <CalendarView.Col key={colIdx}>
-            {col.date.format("D")}
-          </CalendarView.Col>
+      <CalendarView.Row numberOfEventRows={calendarRowEvents.length}>
+        {weekArr.map((_col, colIdx) => (
+          <CalendarView.Col key={colIdx} />
         ))}
         <CalendarRowEventView
           eventRows={calendarRowEvents}
