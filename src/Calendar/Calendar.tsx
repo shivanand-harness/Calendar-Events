@@ -6,36 +6,52 @@ import WeekView from "./Views/WeekView";
 import MonthView from "./Views/MonthView";
 
 import QuaterView from "./Views/QuaterView";
-import { EventSpec, View, WEEK } from "./types";
+import {
+  EventSpec,
+  View,
+  DAY,
+  CalendarWrapperConfig,
+  CalendarHeaderRowConfig,
+  CalendarHeaderCellConfig,
+  CalendarRowConfig,
+  CalendarCellConfig,
+} from "./types";
 import ViewSelector from "./HeaderView/ViewSelector";
 import { updateMomentStarOfWeekConfig } from "./utils";
 import NavigationButtons from "./HeaderView/NavigationButtons";
 
 import css from "./Calendar.module.scss";
+import { CalendarContext } from "./contexts/CalendarContext";
+import { EVENT_HEIGHT, PADDING, STYLE_UNIT } from "./constants";
 
 interface CalendarProps<T> {
   events: Array<EventSpec<T>>;
-  defaultView?: View;
-  startOfWeek?: WEEK;
-  allowedViews?: Array<View>;
+  startDayOfWeek?: DAY;
+  view: View;
+  views?: Array<View>;
   onChange: (view: View, startDate: Moment, endDate: Moment) => void;
+  calendarWrapperConfig?: CalendarWrapperConfig;
+  calendarHeaderRowConfig?: CalendarHeaderRowConfig;
+  calendarHeaderCellConfig?: CalendarHeaderCellConfig;
+  calendarRowConfig?: CalendarRowConfig;
+  calendarCellConfig?: CalendarCellConfig;
 }
 
 export default function Calendar<T>(props: CalendarProps<T>) {
   const {
     events,
-    defaultView,
-    startOfWeek = WEEK.SUN,
-    allowedViews,
+    view,
+    startDayOfWeek = DAY.SUN,
+    views = [],
     onChange,
+    ...rest
   } = props;
   const [currentDate, setCurrentDate] = useState<Moment>(moment());
   const [initialised, setInitialised] = useState(false);
-  const [activeView, setActiveView] = useState(defaultView ?? View.MONTH);
   const [showAllEvents, setShowAllEvents] = useState(false);
 
   const getChangeUnit = () => {
-    switch (activeView) {
+    switch (view) {
       case View.MONTH:
         return "months";
       case View.WEEK:
@@ -81,78 +97,73 @@ export default function Calendar<T>(props: CalendarProps<T>) {
     const unit = getChangeUnit();
     const newCurrentDate = currentDate.clone().add(step, unit);
     setCurrentDate(newCurrentDate);
-    handleUpdateParent(activeView, newCurrentDate)
+    handleUpdateParent(view, newCurrentDate);
   };
 
   const handleChangeActiveView = (view: View) => {
     setCurrentDate(moment());
-    setActiveView(view);
-    handleUpdateParent(view, currentDate)
+    handleUpdateParent(view, currentDate);
   };
 
   useEffect(() => {
-    updateMomentStarOfWeekConfig(startOfWeek);
+    updateMomentStarOfWeekConfig(startDayOfWeek);
     setCurrentDate(moment());
     setInitialised(true);
-    handleUpdateParent(activeView, currentDate)
+    handleUpdateParent(view, currentDate);
     return () => {
-      updateMomentStarOfWeekConfig(WEEK.SUN);
+      updateMomentStarOfWeekConfig(DAY.SUN);
     };
-  }, [startOfWeek]);
+  }, [startDayOfWeek]);
 
   if (!initialised) return <></>;
 
   return (
-    <div className={css.container}>
-      <div className={css.actionsWrapper}>
-        <NavigationButtons
-          currentDate={currentDate}
-          onChange={handleChangeCurrentDate}
-        />
-        <div className={css.rightActionWrapper}>
-          <label className={css.checkbox}>
-            <input
-              type="checkbox"
-              value="SHOW_ALL_EVENTS"
-              onChange={(evt) => {
-                setShowAllEvents(evt.target.checked);
-              }}
-            />
-            <span>Show all events</span>
-          </label>
-          <ViewSelector
-            allowedViews={allowedViews}
-            onChange={handleChangeActiveView}
-            activeView={activeView}
+    <CalendarContext.Provider
+      value={{
+        view,
+        views,
+        startDayOfWeek,
+        onChange,
+        currentDate,
+        setCurrentDate,
+        setShowAllEvents,
+        showAllEvents,
+        events,
+        eventHeight: EVENT_HEIGHT,
+        padding: PADDING,
+        styleUnit: STYLE_UNIT,
+        ...rest,
+      }}
+    >
+      <div className={css.container}>
+        <div className={css.actionsWrapper}>
+          <NavigationButtons
+            currentDate={currentDate}
+            onChange={handleChangeCurrentDate}
           />
+          <div className={css.rightActionWrapper}>
+            <label className={css.checkbox}>
+              <input
+                type="checkbox"
+                value="SHOW_ALL_EVENTS"
+                onChange={(evt) => {
+                  setShowAllEvents(evt.target.checked);
+                }}
+              />
+              <span>Show all events</span>
+            </label>
+            <ViewSelector
+              allowedViews={views}
+              onChange={handleChangeActiveView}
+              activeView={view}
+            />
+          </div>
         </div>
+        {view === View.DAY && <DayView />}
+        {view === View.WEEK && <WeekView />}
+        {view === View.MONTH && <MonthView />}
+        {view === View.QUATER && <QuaterView />}
       </div>
-      {activeView === View.DAY && (
-        <DayView currentDate={currentDate} events={events} />
-      )}
-      {activeView === View.WEEK && (
-        <WeekView
-          startOfWeek={startOfWeek}
-          currentDate={currentDate}
-          events={events}
-          showAllEvents={showAllEvents}
-        />
-      )}
-      {activeView === View.MONTH && (
-        <MonthView
-          startOfWeek={startOfWeek}
-          currentDate={currentDate}
-          events={events}
-          showAllEvents={showAllEvents}
-        />
-      )}
-      {activeView === View.QUATER && (
-        <QuaterView
-          currentDate={currentDate}
-          events={events}
-          showAllEvents={showAllEvents}
-        />
-      )}
-    </div>
+    </CalendarContext.Provider>
   );
 }

@@ -1,8 +1,9 @@
 import { useContext } from "react";
 import { CalendarEventSpec } from "../types";
-import { EVENT_HEIGHT, PADDING } from "../constants";
-import { CalendarViewContext, RowContext } from "../Views/CalendarView";
 import styles from "./EventViews.module.scss";
+import { EventsRowContext } from "../contexts/EventsRowContext";
+import { CalendarViewContext } from "../contexts/CalendarViewContext";
+import { CalendarContext } from "../contexts/CalendarContext";
 
 interface ShowMoreEventViewProps<T> {
   span: number;
@@ -13,30 +14,28 @@ interface ShowMoreEventViewProps<T> {
 
 export default function ShowMoreEventView<T>(props: ShowMoreEventViewProps<T>) {
   const { span, left, list, allowedNumberOfRows } = props;
-  const { numberOfCols, numberOfHeaderCols, showAllEvents } =
-    useContext(CalendarViewContext);
-  const { defaultTopPadding, rowWidth } = useContext(RowContext);
+  const { showAllEvents, padding, styleUnit } = useContext(CalendarContext);
+  const { numberOfCols, numberOfHeaderCols } = useContext(CalendarViewContext);
+  const { rowWidth, eventHeight } = useContext(EventsRowContext);
   const colWidth = rowWidth / numberOfCols;
 
   if (list.length <= allowedNumberOfRows || showAllEvents) return <></>;
   // width = col width * number of days the event is spanned - horizontal padding * 2 side
-  let width = colWidth * span - PADDING * 2;
+  let width = colWidth * span - padding * 2;
   // left position = col width * (number of columns to left + number of header cols if any) + horizontal padding to left
-  let leftPosition = colWidth * (left + numberOfHeaderCols) + PADDING;
-  // top = row index * (each event height + gap between events) + default top padding for date number to show
-  const top =
-    allowedNumberOfRows * (EVENT_HEIGHT + PADDING) + defaultTopPadding;
+  let leftPosition = colWidth * (left + numberOfHeaderCols) + padding;
+
   return (
     <div
       style={{
-        width: `${width}px`,
-        left: `${leftPosition}px`,
-        top: `${top}px`,
-        height: `${EVENT_HEIGHT}px`,
+        width: `${width}${styleUnit}`,
+        left: `${leftPosition}${styleUnit}`,
+        bottom: `${padding}${styleUnit}`,
+        height: `${eventHeight}${styleUnit}`,
       }}
       className={styles.showMoreEvent}
     >
-      +{list.length - allowedNumberOfRows} more
+      + {list.length - allowedNumberOfRows} more
     </div>
   );
 }

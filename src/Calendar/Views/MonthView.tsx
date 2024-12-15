@@ -1,8 +1,7 @@
-import { useMemo } from "react";
-import { Moment } from "moment";
+import { useContext, useMemo } from "react";
+import classNames from "classnames";
 
-import CalendarView from "./CalendarView";
-import { EventSpec, WEEK } from "../types";
+import CalendarView from "../components/CalendarView/CalendarView";
 import CalendarRowEventView from "../EventViews/CalendarRowEventView";
 
 import {
@@ -11,53 +10,80 @@ import {
   getChunkArray,
   getEventsRowByStartDateAndEndDate,
 } from "../utils";
-
+import { CalendarContext } from "../contexts/CalendarContext";
 import css from "./Views.module.scss";
 import { DEFAULT_TOP_PADDING } from "../constants";
 
-interface MonthViewProps<T> {
-  currentDate: Moment;
-  events: Array<EventSpec<T>>;
-  startOfWeek: WEEK;
-  showAllEvents?: boolean;
-}
-
-export default function MonthView<T>(props: MonthViewProps<T>) {
-  const { events, currentDate, startOfWeek, showAllEvents = false } = props;
+export default function MonthView() {
+  const {
+    calendarWrapperConfig,
+    calendarHeaderRowConfig,
+    calendarHeaderCellConfig,
+    calendarCellConfig,
+    calendarRowConfig,
+    currentDate,
+    startDayOfWeek,
+    events,
+  } = useContext(CalendarContext);
+  const numberOfCols = 7;
   const monthArr = useMemo(() => generateMonthView(currentDate), [currentDate]);
-  const headers = generateMonthViewHeaders(startOfWeek);
-  const chunkArray = useMemo(() => getChunkArray(monthArr, 7), [monthArr]);
+  const headers = generateMonthViewHeaders(startDayOfWeek);
+  const chunkArray = useMemo(
+    () => getChunkArray(monthArr, numberOfCols),
+    [monthArr]
+  );
   const eventRows = useMemo(() => {
     return chunkArray.map((each) =>
-      getEventsRowByStartDateAndEndDate(events, each[0].date, each[6].date)
+      getEventsRowByStartDateAndEndDate(
+        events,
+        each[0].date,
+        each[numberOfCols - 1].date
+      )
     );
   }, [events, monthArr]);
 
   return (
     <CalendarView
-      className={css.monthViewCalendarWrapper}
-      showAllEvents={showAllEvents}
-      numberOfCols={7}
+      className={classNames(
+        calendarWrapperConfig?.className,
+        css.monthViewCalendarWrapper
+      )}
+      numberOfCols={numberOfCols}
     >
-      <CalendarView.HeaderRow>
+      <CalendarView.HeaderRow className={calendarHeaderRowConfig?.className}>
         {headers.map((each) => (
-          <CalendarView.HeaderCol key={each}>{each}</CalendarView.HeaderCol>
+          <CalendarView.HeaderCell
+            key={each}
+            className={calendarHeaderCellConfig?.className}
+          >
+            {calendarHeaderCellConfig?.renderer
+              ? calendarHeaderCellConfig.renderer(each)
+              : each}
+          </CalendarView.HeaderCell>
         ))}
       </CalendarView.HeaderRow>
       {chunkArray.map((cols, rowIdx) => (
         <CalendarView.Row
           key={rowIdx}
+          className={classNames(calendarRowConfig?.className)}
           numberOfEventRows={eventRows[rowIdx].calendarRowEvents.length}
-          defaultTopPadding={DEFAULT_TOP_PADDING}
+          eventsRowTopPadding={DEFAULT_TOP_PADDING}
         >
           {cols.map((col, colIdx) => (
-            <CalendarView.Col key={colIdx} isCurrentMonth={col.isCurrentMonth}>
-              {col.date.format("D")}
-            </CalendarView.Col>
+            <CalendarView.Cell
+              key={colIdx}
+              isCurrentMonth={col.isCurrentMonth}
+              className={calendarCellConfig?.className}
+            >
+              {calendarCellConfig?.renderer
+                ? calendarCellConfig.renderer(col.date)
+                : col.date.format(calendarCellConfig?.dateFormat || "D")}
+            </CalendarView.Cell>
           ))}
           <CalendarRowEventView
             eventRows={eventRows[rowIdx].calendarRowEvents}
             eventsGroupByDate={eventRows[rowIdx].eventsGroupByDate}
+            eventsRowTopPadding={DEFAULT_TOP_PADDING}
           />
         </CalendarView.Row>
       ))}

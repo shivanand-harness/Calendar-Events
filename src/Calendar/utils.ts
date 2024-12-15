@@ -1,25 +1,31 @@
 import moment, { Moment } from "moment";
-import { CalendarEventSpec, EventSpec, QuaterViewMonthConfig } from "./types";
+import { CalendarEventSpec, DAY, EventSpec, QuaterViewMonthConfig } from "./types";
 
-const startOfWeek = (date: Moment) => date.clone().startOf("week");
+const startDayOfWeek = (date: Moment) => date.clone().startOf("week");
 
 const endOfWeek = (date: Moment) => date.clone().endOf("week");
 
-export const updateMomentStarOfWeekConfig = (startOfWeekDay: number) => {
+export const updateMomentStarOfWeekConfig = (startDayOfWeekDay: number) => {
   moment.updateLocale("en", {
     week: {
-      dow: startOfWeekDay,
+      dow: startDayOfWeekDay,
     },
   });
 };
 
-export const generateMonthViewHeaders = (startOfWeekDay: number) => {
+export const generateMonthViewHeaders = (startDayOfWeekDay: number) => {
   const weekdays = moment.weekdaysShort(); // ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
   return [
-    ...weekdays.slice(startOfWeekDay),
-    ...weekdays.slice(0, startOfWeekDay),
+    ...weekdays.slice(startDayOfWeekDay),
+    ...weekdays.slice(0, startDayOfWeekDay),
   ]; // Move 'Sun' to the end
 };
+
+export const generateQuaterViewHeaders = (numberOfHeaderCols: number) => {
+  const headers = new Array(31).fill(1).map((_, idx) => idx + 1);
+  const headerCols = new Array(numberOfHeaderCols).fill("");
+  return [...headerCols, ...headers]
+}
 
 export const generateMonthView = (currentDate: Moment) => {
   const startOfMonth = currentDate.clone().startOf("month");
@@ -41,7 +47,7 @@ export const generateMonthView = (currentDate: Moment) => {
 };
 
 export const generateWeekView = (currentDate: Moment) => {
-  const startDay = startOfWeek(currentDate);
+  const startDay = startDayOfWeek(currentDate);
   const endDay = endOfWeek(currentDate);
   const days = [];
   let day = startDay.clone();

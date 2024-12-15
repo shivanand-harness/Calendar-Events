@@ -1,13 +1,15 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import moment from "moment";
 
 import Calendar from "./Calendar/Calendar";
-import { View, WEEK } from "./Calendar/types";
+import { View, DAY } from "./Calendar/types";
 import { MOCK_CALENDAR_EVENTS } from "./mockData";
 
 import "./styles.css";
 
 export default function App() {
+  const [view, setView] = useState(View.MONTH);
+
   const events = useMemo(
     () =>
       MOCK_CALENDAR_EVENTS.map((each) => ({
@@ -22,16 +24,10 @@ export default function App() {
     <div className="App">
       <Calendar
         events={events}
-        defaultView={View.MONTH}
-        startOfWeek={WEEK.MON}
-        allowedViews={[View.MONTH, View.WEEK, View.DAY, View.QUATER]}
-        onChange={(view, startDate, endDate) => {
-          console.log(
-            view,
-            startDate.format("DD/MM/YYYY"),
-            endDate.format("DD/MM/YYYY")
-          );
-        }}
+        view={view}
+        startDayOfWeek={DAY.MON}
+        views={[View.MONTH, View.WEEK, View.DAY, View.QUATER]}
+        onChange={setView}
       />
     </div>
   );

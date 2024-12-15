@@ -1,10 +1,11 @@
 import { CalendarEventSpec } from "../types";
 
 import styles from "./EventViews.module.scss";
-import { EVENT_HEIGHT, PADDING } from "../constants";
 import classNames from "classnames";
 import { useContext } from "react";
-import { CalendarViewContext, RowContext } from "../Views/CalendarView";
+import { EventsRowContext } from "../contexts/EventsRowContext";
+import { CalendarViewContext } from "../contexts/CalendarViewContext";
+import { CalendarContext } from "../contexts/CalendarContext";
 
 interface EventViewProps<T> {
   event: CalendarEventSpec<T>;
@@ -23,24 +24,25 @@ export default function EventView<T>(props: EventViewProps<T>) {
   const { name, backgroundColor, color } = eventInfo as any;
 
   const { numberOfCols, numberOfHeaderCols } = useContext(CalendarViewContext);
-  const { defaultTopPadding, rowWidth } = useContext(RowContext);
+  const { rowWidth, eventHeight } = useContext(EventsRowContext);
+  const { padding, styleUnit } = useContext(CalendarContext);
   const colWidth = rowWidth / numberOfCols;
 
-  // top = row index * (each event height + gap between events) + default top padding for date number to show
-  const top = rowIndex * (EVENT_HEIGHT + PADDING) + defaultTopPadding;
+  // top = row index * (each event height + gap between events)
+  const top = rowIndex * (eventHeight + padding);
   // width = col width * number of days the event is spanned - horizontal padding * 2 side
-  let width = colWidth * span - PADDING * 2;
+  let width = colWidth * span - padding * 2;
   // left position = col width * (number of columns to left + number of header cols if any) + horizontal padding to left
-  let leftPosition = colWidth * (left + numberOfHeaderCols) + PADDING;
+  let leftPosition = colWidth * (left + numberOfHeaderCols) + padding;
 
   return (
     <>
       <div
         style={{
-          width: `${width}px`,
-          left: `${leftPosition}px`,
-          top: `${top}px`,
-          height: `${EVENT_HEIGHT}px`,
+          width: `${width}${styleUnit}`,
+          left: `${leftPosition}${styleUnit}`,
+          top: `${top}${styleUnit}`,
+          height: `${eventHeight}${styleUnit}`,
           backgroundColor,
           color,
         }}
@@ -51,10 +53,10 @@ export default function EventView<T>(props: EventViewProps<T>) {
           <div
             className={classNames(styles.overLapping, styles.leftOverLapping)}
             style={{
-              height: `${EVENT_HEIGHT}px`,
-              borderTopWidth: `${PADDING}px`,
-              borderBottomWidth: `${PADDING}px`,
-              borderRightWidth: `${PADDING - 1}px`,
+              height: `${eventHeight}${styleUnit}`,
+              borderTopWidth: `${padding}${styleUnit}`,
+              borderBottomWidth: `${padding}${styleUnit}`,
+              borderRightWidth: `${padding - 1}${styleUnit}`,
               borderRightColor: backgroundColor,
             }}
           />
@@ -63,10 +65,10 @@ export default function EventView<T>(props: EventViewProps<T>) {
           <div
             className={classNames(styles.overLapping, styles.rightOverLapping)}
             style={{
-              height: `${EVENT_HEIGHT}px`,
-              borderTopWidth: `${PADDING}px`,
-              borderBottomWidth: `${PADDING}px`,
-              borderLeftWidth: `${PADDING - 1}px`,
+              height: `${eventHeight}${styleUnit}`,
+              borderTopWidth: `${padding}${styleUnit}`,
+              borderBottomWidth: `${padding}${styleUnit}`,
+              borderLeftWidth: `${padding - 1}${styleUnit}`,
               borderLeftColor: backgroundColor,
             }}
           />

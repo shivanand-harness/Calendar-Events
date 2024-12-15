@@ -8,6 +8,6 @@ export const AllowedCalendarViewList = [
 ];
 
 export const DEFAULT_TOP_PADDING = 35;
-export const DEFAULT_BOTTOM_PADDING = 20;
 export const EVENT_HEIGHT = 20;
-export const PADDING = 10
+export const PADDING = 10;
+export const STYLE_UNIT = "px";

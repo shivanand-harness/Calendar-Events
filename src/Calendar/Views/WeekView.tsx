@@ -1,29 +1,22 @@
-import { useMemo } from "react";
-import { Moment } from "moment";
+import { CSSProperties, useContext, useMemo } from "react";
 import {
   generateWeekView,
   generateMonthViewHeaders,
   getEventsRowByStartDateAndEndDate,
 } from "../utils";
 
-import CalendarView from "./CalendarView";
-import { EventSpec, WEEK } from "../types";
-import { DEFAULT_TOP_PADDING } from "../constants";
+import CalendarView from "../components/CalendarView/CalendarView";
 import CalendarRowEventView from "../EventViews/CalendarRowEventView";
 
 import css from "./Views.module.scss";
+import classNames from "classnames";
+import { CalendarContext } from "../contexts/CalendarContext";
 
-interface WeekViewProps<T> {
-  currentDate: Moment;
-  events: Array<EventSpec<T>>;
-  startOfWeek: WEEK;
-  showAllEvents?: boolean;
-}
-
-export default function WeekView<T>(props: WeekViewProps<T>) {
-  const { events, currentDate, startOfWeek, showAllEvents = false } = props;
+export default function WeekView() {
+  const { calendarRowConfig, events, currentDate, startDayOfWeek } =
+    useContext(CalendarContext);
   const weekArr = useMemo(() => generateWeekView(currentDate), [currentDate]);
-  const headers = generateMonthViewHeaders(startOfWeek);
+  const headers = generateMonthViewHeaders(startDayOfWeek);
 
   const { calendarRowEvents, eventsGroupByDate } = useMemo(() => {
     return getEventsRowByStartDateAndEndDate(
@@ -34,21 +27,20 @@ export default function WeekView<T>(props: WeekViewProps<T>) {
   }, [events, weekArr]);
 
   return (
-    <CalendarView
-      className={css.weekViewCalendarWrapper}
-      showAllEvents={showAllEvents}
-      numberOfCols={7}
-    >
+    <CalendarView className={css.weekViewCalendarWrapper} numberOfCols={7}>
       <CalendarView.HeaderRow>
         {headers.map((each, colIdx) => (
-          <CalendarView.HeaderCol key={each}>
+          <CalendarView.HeaderCell key={each}>
             {weekArr[colIdx].date.format("ddd DD MMM")}
-          </CalendarView.HeaderCol>
+          </CalendarView.HeaderCell>
         ))}
       </CalendarView.HeaderRow>
-      <CalendarView.Row numberOfEventRows={calendarRowEvents.length}>
+      <CalendarView.Row
+        className={classNames(calendarRowConfig?.className)}
+        numberOfEventRows={calendarRowEvents.length}
+      >
         {weekArr.map((_col, colIdx) => (
-          <CalendarView.Col key={colIdx} />
+          <CalendarView.Cell key={colIdx} />
         ))}
         <CalendarRowEventView
           eventRows={calendarRowEvents}

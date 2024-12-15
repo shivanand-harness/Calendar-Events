@@ -15,7 +15,7 @@ export enum Month {
   DEC = 11,
 }
 
-export enum WEEK {
+export enum DAY {
   SUN = 0,
   MON = 1,
   TUE = 2,
@@ -49,4 +49,28 @@ export interface QuaterViewMonthConfig {
   month: string;
   startDate: Moment;
   endDate: Moment;
+}
+
+
+export interface CalendarWrapperConfig {
+  className?: string;
+}
+
+export interface CalendarHeaderRowConfig {
+  className?: string;
+}
+
+export interface CalendarHeaderCellConfig {
+  className?: string;
+  renderer?: (day: string | Moment | number) => React.ReactNode;
+}
+
+export interface CalendarRowConfig {
+  className?: string;
+}
+
+export interface CalendarCellConfig {
+  className?: string;
+  renderer?: (date: Moment | number) => React.ReactNode;
+  dateFormat?: string;
 }

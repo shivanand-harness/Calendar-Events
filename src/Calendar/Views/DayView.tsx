@@ -1,39 +1,55 @@
-import { useMemo } from "react";
-import { Moment } from "moment";
+import { CSSProperties, useContext, useMemo } from "react";
 
-import { EventSpec } from "../types";
-import CalendarView from "./CalendarView";
+import CalendarView from "../components/CalendarView/CalendarView";
 import { getEventsRowByStartDateAndEndDate } from "../utils";
 import CalendarRowEventView from "../EventViews/CalendarRowEventView";
 
 import css from "./Views.module.scss";
+import classNames from "classnames";
+import { CalendarContext } from "../contexts/CalendarContext";
 
-interface DayViewProps<T> {
-  currentDate: Moment;
-  events: Array<EventSpec<T>>;
-  showAllEvents?: boolean;
-}
-
-export default function DayView<T>(props: DayViewProps<T>) {
-  const { currentDate, events, showAllEvents = false } = props;
+export default function DayView() {
+  const {
+    calendarWrapperConfig,
+    calendarHeaderRowConfig,
+    calendarHeaderCellConfig,
+    calendarCellConfig,
+    calendarRowConfig,
+    currentDate,
+    events,
+  } = useContext(CalendarContext);
   const { calendarRowEvents, eventsGroupByDate } = useMemo(() => {
     return getEventsRowByStartDateAndEndDate(events, currentDate, currentDate);
   }, [events, currentDate]);
 
   return (
     <CalendarView
-      className={css.dayViewCalendarWrapper}
+      className={classNames(calendarWrapperConfig?.className)}
       numberOfCols={1}
-      showAllEvents={showAllEvents}
     >
-      <CalendarView.HeaderRow>
-        <CalendarView.HeaderCol>
-          <span>{currentDate.format("ddd")}</span> &nbsp;
-          <span>{currentDate.format("D MMM YY")}</span>
-        </CalendarView.HeaderCol>
+      <CalendarView.HeaderRow className={calendarHeaderRowConfig?.className}>
+        <CalendarView.HeaderCell
+          className={calendarHeaderCellConfig?.className}
+        >
+          {calendarHeaderCellConfig?.renderer ? (
+            calendarHeaderCellConfig.renderer(currentDate)
+          ) : (
+            <>
+              <span>{currentDate.format("ddd")}</span> &nbsp;
+              <span>{currentDate.format("D MMM YY")}</span>
+            </>
+          )}
+        </CalendarView.HeaderCell>
       </CalendarView.HeaderRow>
-      <CalendarView.Row numberOfEventRows={calendarRowEvents.length}>
-        <CalendarView.Col />
+      <CalendarView.Row
+        className={classNames(calendarRowConfig?.className)}
+        numberOfEventRows={calendarRowEvents.length}
+      >
+        <CalendarView.Cell className={calendarCellConfig?.className}>
+          {calendarCellConfig?.renderer
+            ? calendarCellConfig.renderer(currentDate)
+            : null}
+        </CalendarView.Cell>
         <CalendarRowEventView
           eventRows={calendarRowEvents}
           eventsGroupByDate={eventsGroupByDate}
