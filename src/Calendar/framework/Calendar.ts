@@ -1,6 +1,6 @@
 import { Moment } from "moment";
 import { EventSpec, View } from "../types";
-import { CalendarViewArraySpec, CalendarViewCellSpec } from "../Views/types";
+import { CalendarViewArraySpec, CalendarViewCellSpec } from "./types";
 
 export abstract class Calendar<
   T1 extends CalendarViewArraySpec = CalendarViewArraySpec,

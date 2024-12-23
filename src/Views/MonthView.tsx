@@ -1,19 +1,22 @@
 import { Moment, unitOfTime } from "moment";
 
-import { CalendarEventSpec, EventSpec, View } from "../types";
-import { Calendar } from "../framework/Calendar";
-import { DEFAULT_TOP_PADDING } from "../constants";
-import CalendarView from "../components/CalendarView/CalendarView";
-import CalendarRowEventView from "../EventViews/CalendarRowEventView";
+import { CalendarEventSpec, EventSpec, View } from "../Calendar/types";
+import { Calendar } from "../Calendar/framework/Calendar";
+import { DEFAULT_TOP_PADDING } from "../Calendar/constants";
+import CalendarView from "../Calendar/components/CalendarView/CalendarView";
+import CalendarRowEventView from "../Calendar/EventViews/CalendarRowEventView";
 
 import {
   generateMonthView,
   generateMonthViewHeaders,
   getChunkArray,
   getEventsRowByStartDateAndEndDate,
-} from "../utils";
-import EventView from "../EventViews/EventView";
-import { CalendarViewArraySpec, CalendarViewCellSpec } from "./types";
+} from "../Calendar/utils";
+import EventView from "../Calendar/EventViews/EventView";
+import {
+  CalendarViewArraySpec,
+  CalendarViewCellSpec,
+} from "../Calendar/framework/types";
 
 export class MonthView extends Calendar<
   CalendarViewArraySpec,

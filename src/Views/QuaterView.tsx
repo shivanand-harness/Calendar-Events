@@ -1,11 +1,11 @@
 import { Moment, unitOfTime } from "moment";
 import classNames from "classnames";
 
-import { CalendarEventSpec, EventSpec, View } from "../types";
-import EventView from "../EventViews/EventView";
-import { Calendar } from "../framework/Calendar";
-import CalendarView from "../components/CalendarView/CalendarView";
-import CalendarRowEventView from "../EventViews/CalendarRowEventView";
+import { CalendarEventSpec, EventSpec, View } from "../Calendar/types";
+import EventView from "../Calendar/EventViews/EventView";
+import { Calendar } from "../Calendar/framework/Calendar";
+import CalendarView from "../Calendar/components/CalendarView/CalendarView";
+import CalendarRowEventView from "../Calendar/EventViews/CalendarRowEventView";
 
 import {
   fillColumns,
@@ -13,11 +13,14 @@ import {
   generateQuaterViewHeaders,
   getCalendarRowsForMultiMonthView,
   getEventsRowByStartDateAndEndDate,
-} from "../utils";
+} from "../Calendar/utils";
+
+import {
+  CalendarViewArraySpec,
+  CalendarViewCellSpec,
+} from "../Calendar/framework/types";
 
 import css from "./Views.module.scss";
-
-import { CalendarViewArraySpec, CalendarViewCellSpec } from "./types";
 
 export class QuaterView extends Calendar<
   CalendarViewArraySpec<CalendarViewCellSpec>,

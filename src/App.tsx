@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
 import moment from "moment";
+import { useMemo, useState } from "react";
 
+import { factory } from "./Views/utils";
 import Calendar from "./Calendar/Calendar";
 import { View, DAY } from "./Calendar/types";
 import { MOCK_CALENDAR_EVENTS_V2 } from "./mockData";
@@ -27,6 +28,7 @@ export default function App() {
       <Calendar
         events={eventsV2}
         view={view}
+        factory={factory}
         startDayOfWeek={DAY.MON}
         views={[View.MONTH, View.WEEK, View.DAY, View.QUATER]}
         onChange={setView}

@@ -1,6 +1,6 @@
 import { Calendar } from "./Calendar";
 
-class CalendarFactory {
+export default class CalendarFactory {
   protected calendarTypeBank: Map<string, Calendar>;
 
   constructor() {
@@ -19,5 +19,3 @@ class CalendarFactory {
     return this.calendarTypeBank.get(value);
   }
 }
-
-export default new CalendarFactory();

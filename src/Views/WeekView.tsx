@@ -1,13 +1,19 @@
 import { Moment } from "moment";
 
-import EventView from "../EventViews/EventView";
-import { Calendar } from "../framework/Calendar";
-import CalendarView from "../components/CalendarView/CalendarView";
-import CalendarRowEventView from "../EventViews/CalendarRowEventView";
+import EventView from "../Calendar/EventViews/EventView";
+import { Calendar } from "../Calendar/framework/Calendar";
+import CalendarView from "../Calendar/components/CalendarView/CalendarView";
+import CalendarRowEventView from "../Calendar/EventViews/CalendarRowEventView";
 
-import { CalendarEventSpec, EventSpec, View } from "../types";
-import { CalendarViewArraySpec, CalendarViewCellSpec } from "./types";
-import { generateWeekView, getEventsRowByStartDateAndEndDate } from "../utils";
+import { EventSpec, View } from "../Calendar/types";
+import {
+  generateWeekView,
+  getEventsRowByStartDateAndEndDate,
+} from "../Calendar/utils";
+import {
+  CalendarViewArraySpec,
+  CalendarViewCellSpec,
+} from "../Calendar/framework/types";
 
 export class WeekView extends Calendar<
   CalendarViewArraySpec<EventSpec<unknown>>,

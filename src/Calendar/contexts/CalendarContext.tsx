@@ -10,6 +10,7 @@ import {
   CalendarCellConfig,
 } from "../types";
 import moment, { Moment } from "moment";
+import CalendarFactory from "../framework/CalendarFactory";
 
 interface CalendarContextSpec<T> {
   view: View;
@@ -17,6 +18,7 @@ interface CalendarContextSpec<T> {
   views: Array<View>;
   onChange: (view: View, startDate: Moment, endDate: Moment) => void;
   currentDate: Moment;
+  factory: CalendarFactory;
   setCurrentDate: (date: Moment) => void;
   showAllEvents: boolean;
   setShowAllEvents: (showAllEvents: boolean) => void;
@@ -43,5 +45,6 @@ export const CalendarContext = createContext<CalendarContextSpec<unknown>>({
   events: [],
   eventHeight: 0,
   padding: 0,
-  styleUnit: 'px',
+  styleUnit: "px",
+  factory: new CalendarFactory(),
 });

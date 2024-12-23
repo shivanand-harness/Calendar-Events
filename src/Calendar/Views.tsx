@@ -1,14 +1,13 @@
 import { useContext } from "react";
 import classNames from "classnames";
 
-import CalendarFactory from "../framework/CalendarFactory";
-import { CalendarContext } from "../contexts/CalendarContext";
-import CalendarView from "../components/CalendarView/CalendarView";
+import { CalendarContext } from "./contexts/CalendarContext";
+import CalendarView from "./components/CalendarView/CalendarView";
 
-export default function CalendarViewView() {
-  const { calendarWrapperConfig, events, currentDate, view } =
+export default function Views() {
+  const { calendarWrapperConfig, events, currentDate, view, factory } =
     useContext(CalendarContext);
-  const calendarViewInstance = CalendarFactory.getCalendarType(view);
+  const calendarViewInstance = factory.getCalendarType(view);
 
   if (!calendarViewInstance) return null;
   return (

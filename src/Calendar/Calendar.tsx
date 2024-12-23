@@ -15,19 +15,19 @@ import ViewSelector from "./HeaderView/ViewSelector";
 import { updateMomentStarOfWeekConfig } from "./utils";
 import NavigationButtons from "./HeaderView/NavigationButtons";
 
-import css from "./Calendar.module.scss";
+import Views from "./Views";
+import CalendarFactory from "./framework/CalendarFactory";
 import { CalendarContext } from "./contexts/CalendarContext";
 import { EVENT_HEIGHT, PADDING, STYLE_UNIT } from "./constants";
-import CalendarView from "./Views/CalendarView";
 
-import "./Views/utils";
-import CalendarFactory from "./framework/CalendarFactory";
+import css from "./Calendar.module.scss";
 
 interface CalendarProps<T> {
   events: Array<EventSpec<T>>;
   startDayOfWeek?: DAY;
   view: View;
   views?: Array<View>;
+  factory: CalendarFactory;
   onChange: (view: View, startDate?: Moment, endDate?: Moment) => void;
   calendarWrapperConfig?: CalendarWrapperConfig;
   calendarHeaderRowConfig?: CalendarHeaderRowConfig;
@@ -43,13 +43,14 @@ export default function Calendar<T>(props: CalendarProps<T>) {
     startDayOfWeek = DAY.SUN,
     views = [],
     onChange,
+    factory,
     ...rest
   } = props;
   const [currentDate, setCurrentDate] = useState<Moment>(moment());
   const [initialised, setInitialised] = useState(false);
   const [showAllEvents, setShowAllEvents] = useState(false);
 
-  const calendarViewInstance = useRef(CalendarFactory.getCalendarType(view));
+  const calendarViewInstance = useRef(factory.getCalendarType(view));
 
   const getChangeUnit = () => {
     return calendarViewInstance.current?.navigationChangeUnit;
@@ -60,7 +61,7 @@ export default function Calendar<T>(props: CalendarProps<T>) {
   };
 
   const handleUpdateParent = (view: View, date: Moment) => {
-    calendarViewInstance.current = CalendarFactory.getCalendarType(view);
+    calendarViewInstance.current = factory.getCalendarType(view);
     const response = getStartAndEndDateOfSelectedView(date);
     onChange(view, response?.startDate, response?.endDate);
   };
@@ -104,6 +105,7 @@ export default function Calendar<T>(props: CalendarProps<T>) {
         eventHeight: EVENT_HEIGHT,
         padding: PADDING,
         styleUnit: STYLE_UNIT,
+        factory,
         ...rest,
       }}
     >
@@ -131,7 +133,7 @@ export default function Calendar<T>(props: CalendarProps<T>) {
             />
           </div>
         </div>
-        <CalendarView />
+        <Views />
       </div>
     </CalendarContext.Provider>
   );
