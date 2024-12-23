@@ -1,5 +1,10 @@
 import moment, { Moment } from "moment";
-import { CalendarEventSpec, DAY, EventSpec, QuaterViewMonthConfig } from "./types";
+import {
+  CalendarEventSpec,
+  DAY,
+  EventSpec,
+  QuaterViewMonthConfig,
+} from "./types";
 
 const startDayOfWeek = (date: Moment) => date.clone().startOf("week");
 
@@ -24,15 +29,18 @@ export const generateMonthViewHeaders = (startDayOfWeekDay: number) => {
 export const generateQuaterViewHeaders = (numberOfHeaderCols: number) => {
   const headers = new Array(31).fill(1).map((_, idx) => idx + 1);
   const headerCols = new Array(numberOfHeaderCols).fill("");
-  return [...headerCols, ...headers]
-}
+  return [...headerCols, ...headers];
+};
 
-export const generateMonthView = (currentDate: Moment) => {
+export const generateMonthView = (
+  currentDate: Moment,
+  startUnit: moment.unitOfTime.StartOf = "week"
+) => {
   const startOfMonth = currentDate.clone().startOf("month");
   const endOfMonth = currentDate.clone().endOf("month");
 
-  const startDay = startOfMonth.clone().startOf("week");
-  const endDay = endOfMonth.clone().endOf("week");
+  const startDay = startOfMonth.clone().startOf(startUnit);
+  const endDay = endOfMonth.clone().endOf(startUnit);
 
   const days = [];
   let day = startDay.clone();
@@ -145,6 +153,8 @@ export function getEventsRowByStartDateAndEndDate<T>(
         endDateOverLapping,
         eventInfo: each.eventInfo,
         left: eventStartDate.diff(startDate, "days"),
+        id: each.id,
+        type: each.type,
       };
     })
     .sort((a, b) => {
@@ -195,4 +205,14 @@ export function getCalendarRowsForMultiMonthView(
     });
   }
   return list;
+}
+
+export function fillColumns<T>(arr: T[], numberOfColumns: number): T[] {
+  const result = [];
+  let lastValue = {} as T;
+  for (let i = 0; i < numberOfColumns; i++) {
+    result.push(arr[i] || lastValue);
+    if (arr[i]) lastValue = arr[i];
+  }
+  return result;
 }

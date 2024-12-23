@@ -1,52 +1,108 @@
-import { CSSProperties, useContext, useMemo } from "react";
-import {
-  generateWeekView,
-  generateMonthViewHeaders,
-  getEventsRowByStartDateAndEndDate,
-} from "../utils";
+import { Moment } from "moment";
 
+import EventView from "../EventViews/EventView";
+import { Calendar } from "../framework/Calendar";
 import CalendarView from "../components/CalendarView/CalendarView";
 import CalendarRowEventView from "../EventViews/CalendarRowEventView";
 
-import css from "./Views.module.scss";
-import classNames from "classnames";
-import { CalendarContext } from "../contexts/CalendarContext";
+import { CalendarEventSpec, EventSpec, View } from "../types";
+import { CalendarViewArraySpec, CalendarViewCellSpec } from "./types";
+import { generateWeekView, getEventsRowByStartDateAndEndDate } from "../utils";
 
-export default function WeekView() {
-  const { calendarRowConfig, events, currentDate, startDayOfWeek } =
-    useContext(CalendarContext);
-  const weekArr = useMemo(() => generateWeekView(currentDate), [currentDate]);
-  const headers = generateMonthViewHeaders(startDayOfWeek);
+export class WeekView extends Calendar<
+  CalendarViewArraySpec<EventSpec<unknown>>,
+  EventSpec<unknown>,
+  CalendarViewCellSpec
+> {
+  name = "Week";
+  value = View.WEEK;
+  numberOfCols = 8;
+  numberOfHeaderCols = 1;
+  startDayOfWeek = 1;
+  defaultTopPadding = 10;
 
-  const { calendarRowEvents, eventsGroupByDate } = useMemo(() => {
-    return getEventsRowByStartDateAndEndDate(
-      events,
-      weekArr[0].date,
-      weekArr[6].date
+  navigationChangeUnit = "week" as moment.DurationInputArg2;
+
+  getStartAndEndDateOfView(currentDate: Moment): {
+    startDate: Moment;
+    endDate: Moment;
+  } {
+    return {
+      startDate: currentDate.clone().startOf("week"),
+      endDate: currentDate.clone().endOf("week"),
+    };
+  }
+
+  getHeaders = (currentDate: Moment): Array<string> => {
+    return [
+      "Releases",
+      ...generateWeekView(currentDate).map((each) =>
+        each.date.format("ddd DD")
+      ),
+    ];
+  };
+
+  renderHeaderCell = (header: string, index: number): JSX.Element => {
+    return (
+      <CalendarView.HeaderCell key={index}>{header}</CalendarView.HeaderCell>
     );
-  }, [events, weekArr]);
+  };
 
-  return (
-    <CalendarView className={css.weekViewCalendarWrapper} numberOfCols={7}>
-      <CalendarView.HeaderRow>
-        {headers.map((each, colIdx) => (
-          <CalendarView.HeaderCell key={each}>
-            {weekArr[colIdx].date.format("ddd DD MMM")}
-          </CalendarView.HeaderCell>
-        ))}
-      </CalendarView.HeaderRow>
-      <CalendarView.Row
-        className={classNames(calendarRowConfig?.className)}
-        numberOfEventRows={calendarRowEvents.length}
-      >
-        {weekArr.map((_col, colIdx) => (
-          <CalendarView.Cell key={colIdx} />
-        ))}
-        <CalendarRowEventView
-          eventRows={calendarRowEvents}
-          eventsGroupByDate={eventsGroupByDate}
-        />
-      </CalendarView.Row>
-    </CalendarView>
-  );
+  getCalendarViewArray = (
+    currentDate: Moment,
+    events: Array<EventSpec<unknown>>
+  ): CalendarViewArraySpec<EventSpec<unknown>>[] => {
+    const releaseEvents = events.filter((each: any) => each.type === "RELEASE");
+    return releaseEvents.map((each: EventSpec<unknown>) => ({
+      headers: [{ ...each }],
+      cells: generateWeekView(currentDate),
+    }));
+  };
+
+  renderHeaderColumnCell = (event: EventSpec<unknown>): JSX.Element => {
+    const { eventInfo } = event;
+    const { name } = eventInfo as any;
+    return <CalendarView.HeaderCell key={name}>{name}</CalendarView.HeaderCell>;
+  };
+
+  renderColumnCell = (day: CalendarViewCellSpec): JSX.Element => {
+    return (
+      <CalendarView.Cell key={day.date.format("YYYY-MM-DD")} isCurrentMonth />
+    );
+  };
+
+  renderEventView = (event: any, rowIndex: number): JSX.Element => {
+    return <EventView key={rowIndex} event={event} rowIndex={rowIndex} />;
+  };
+
+  renderEventRows = (
+    row: CalendarViewArraySpec<EventSpec<unknown>>,
+    events: Array<EventSpec<unknown>>
+  ) => {
+    const startDate = row.cells[0].date;
+    const endDate =
+      row.cells[this.numberOfCols - this.numberOfHeaderCols - 1].date;
+    const parentEventId = row.headers[0].id;
+    const eventsListForWeekView = events.filter(
+      (each) =>
+        each.type === "PHASE" &&
+        (each.eventInfo as any).parentEventId === parentEventId
+    );
+    const eventRows = getEventsRowByStartDateAndEndDate(
+      eventsListForWeekView,
+      startDate,
+      endDate
+    );
+    return (
+      <CalendarRowEventView
+        key={`${startDate.format("YYYY-MM-DD")}-${endDate.format(
+          "YYYY-MM-DD"
+        )}`}
+        eventRows={eventRows.calendarRowEvents}
+        eventsGroupByDate={eventRows.eventsGroupByDate}
+        eventsRowTopPadding={this.defaultTopPadding}
+        renderEventView={this.renderEventView}
+      />
+    );
+  };
 }

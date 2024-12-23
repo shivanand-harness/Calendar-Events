@@ -1,3 +1,158 @@
+export const MOCK_CALENDAR_EVENTS_V2 = [
+  {
+    id: 1,
+    name: "Event 1",
+    startDate: "29/10/2024",
+    endDate: "03/11/2024",
+    backgroundColor: "#6C12BB",
+    color: "#FFF",
+    type: "RELEASE",
+  },
+  {
+    id: 2,
+    name: "Event 2",
+    startDate: "02/11/2024",
+    endDate: "02/11/2024",
+    backgroundColor: "#FFDA03",
+    color: "#383946",
+    type: "RELEASE",
+  },
+  {
+    id: 3,
+    name: "Event 3",
+    startDate: "02/11/2024",
+    endDate: "03/11/2024",
+    backgroundColor: "#ADD8E6",
+    color: "#383946",
+    type: "RELEASE",
+  },
+  {
+    id: 4,
+    name: "Event 4",
+    startDate: "02/11/2024",
+    endDate: "04/11/2024",
+    backgroundColor: "#FFBA54",
+    color: "#383946",
+    type: "RELEASE",
+  },
+  {
+    id: 5,
+    name: "Event 5",
+    startDate: "03/11/2024",
+    endDate: "03/11/2024",
+    backgroundColor: "#9FAAE7",
+    color: "#383946",
+    type: "RELEASE",
+  },
+  {
+    id: 6,
+    name: "Event 6",
+    startDate: "03/11/2024",
+    endDate: "03/11/2024",
+    backgroundColor: "#F2C0BF",
+    color: "#383946",
+    type: "RELEASE",
+  },
+  {
+    id: 7,
+    name: "Event 7",
+    startDate: "03/11/2024",
+    endDate: "03/11/2024",
+    backgroundColor: "#D9DAE5",
+    color: "#383946",
+    type: "RELEASE",
+  },
+  {
+    id: 8,
+    name: "Event 8",
+    startDate: "18/11/2024",
+    endDate: "22/11/2024",
+    backgroundColor: "#6C12BB",
+    color: "#FFF",
+    type: "RELEASE",
+    phases: [],
+  },
+  {
+    id: 9,
+    name: "Event 9",
+    startDate: "29/11/2024",
+    endDate: "01/12/2024",
+    backgroundColor: "#ADD8E6",
+    color: "#383946",
+    type: "RELEASE",
+  },
+  {
+    id: 10,
+    parentEventId: 1,
+    name: "Phase 1",
+    startDate: "29/10/2024",
+    endDate: "31/10/2024",
+    backgroundColor: "#FFDA03",
+    color: "#383946",
+    type: "PHASE",
+  },
+  {
+    id: 11,
+    parentEventId: 1,
+    name: "Phase 2",
+    startDate: "01/11/2024",
+    endDate: "03/11/2024",
+    backgroundColor: "#ADD8E6",
+    color: "#383946",
+    type: "PHASE",
+  },
+  {
+    id: 12,
+    parentEventId: 2,
+    name: "Phase 1",
+    startDate: "02/11/2024",
+    endDate: "03/11/2024",
+    backgroundColor: "#FFDA03",
+    color: "#383946",
+    type: "PHASE",
+  },
+  {
+    id: 13,
+    parentEventId: 2,
+    name: "Phase 2",
+    startDate: "04/11/2024",
+    endDate: "05/11/2024",
+    backgroundColor: "#ADD8E6",
+    color: "#383946",
+    type: "PHASE",
+  },
+  {
+    id: 14,
+    parentEventId: 3,
+    name: "Phase 1",
+    startDate: "02/11/2024",
+    endDate: "03/11/2024",
+    backgroundColor: "#FFDA03",
+    color: "#383946",
+    type: "PHASE",
+  },
+  {
+    id: 15,
+    parentEventId: 4,
+    name: "Phase 1",
+    startDate: "02/11/2024",
+    endDate: "03/11/2024",
+    backgroundColor: "#FFDA03",
+    color: "#383946",
+    type: "PHASE",
+  },
+  {
+    id: 16,
+    parentEventId: 4,
+    name: "Phase 2",
+    startDate: "04/11/2024",
+    endDate: "04/11/2024",
+    backgroundColor: "#ADD8E6",
+    color: "#383946",
+    type: "PHASE",
+  },
+];
+
 export const MOCK_CALENDAR_EVENTS = [
   {
     startDate: "29/10/2024",
@@ -10,23 +165,29 @@ export const MOCK_CALENDAR_EVENTS = [
       endDate: "03/11/2024",
       backgroundColor: "#6C12BB",
       color: "#FFF",
-      type: 'RELEASE',
-      phases: [{
-        startDate: "29/10/2024",
-        endDate: "31/10/2024",
-        name: "Phase 1",
-        backgroundColor: "#FFDA03",
-        color: "#383946",
-        type: 'PHASE'
-      },
-      {
-        startDate: "01/11/2024",
-        endDate: "03/11/2024",
-        name: "Phase 2",
-        backgroundColor: "#ADD8E6",
-        color: "#383946",
-        type: 'PHASE'
-      }]
+      type: "RELEASE",
+      phases: [
+        {
+          startDate: "29/10/2024",
+          endDate: "31/10/2024",
+          eventInfo: {
+            name: "Phase 1",
+            backgroundColor: "#FFDA03",
+            color: "#383946",
+            type: "PHASE",
+          },
+        },
+        {
+          startDate: "01/11/2024",
+          endDate: "03/11/2024",
+          eventInfo: {
+            name: "Phase 2",
+            backgroundColor: "#ADD8E6",
+            color: "#383946",
+            type: "PHASE",
+          },
+        },
+      ],
     },
   },
   {
@@ -40,23 +201,29 @@ export const MOCK_CALENDAR_EVENTS = [
       endDate: "02/11/2024",
       backgroundColor: "#FFDA03",
       color: "#383946",
-      type: 'RELEASE',
-      phases: [{
-        startDate: "02/11/2024",
-        endDate: "03/11/2024",
-        name: "Phase 1",
-        backgroundColor: "#FFDA03",
-        color: "#383946",
-        type: 'PHASE'
-      },
-      {
-        startDate: "04/11/2024",
-        endDate: "05/11/2024",
-        name: "Phase 2",
-        backgroundColor: "#ADD8E6",
-        color: "#383946",
-        type: 'PHASE'
-      }]
+      type: "RELEASE",
+      phases: [
+        {
+          startDate: "02/11/2024",
+          endDate: "03/11/2024",
+          eventInfo: {
+            name: "Phase 1",
+            backgroundColor: "#FFDA03",
+            color: "#383946",
+            type: "PHASE",
+          },
+        },
+        {
+          startDate: "04/11/2024",
+          endDate: "05/11/2024",
+          eventInfo: {
+            name: "Phase 2",
+            backgroundColor: "#ADD8E6",
+            color: "#383946",
+            type: "PHASE",
+          },
+        },
+      ],
     },
   },
   {
@@ -70,15 +237,19 @@ export const MOCK_CALENDAR_EVENTS = [
       endDate: "03/11/2024",
       backgroundColor: "#ADD8E6",
       color: "#383946",
-      type: 'RELEASE',
-      phases: [{
-        startDate: "02/11/2024",
-        endDate: "03/11/2024",
-        name: "Phase 1",
-        backgroundColor: "#FFDA03",
-        color: "#383946",
-        type: 'PHASE'
-      }]
+      type: "RELEASE",
+      phases: [
+        {
+          startDate: "02/11/2024",
+          endDate: "03/11/2024",
+          eventInfo: {
+            name: "Phase 1",
+            backgroundColor: "#FFDA03",
+            color: "#383946",
+            type: "PHASE",
+          },
+        },
+      ],
     },
   },
   {
@@ -92,23 +263,29 @@ export const MOCK_CALENDAR_EVENTS = [
       endDate: "04/11/2024",
       backgroundColor: "#FFBA54",
       color: "#383946",
-      type: 'RELEASE',
-      phases: [{
-        startDate: "02/11/2024",
-        endDate: "03/11/2024",
-        name: "Phase 1",
-        backgroundColor: "#FFDA03",
-        color: "#383946",
-        type: 'PHASE'
-      },
-      {
-        startDate: "04/11/2024",
-        endDate: "04/11/2024",
-        name: "Phase 2",
-        backgroundColor: "#ADD8E6",
-        color: "#383946",
-        type: 'PHASE'
-      }]
+      type: "RELEASE",
+      phases: [
+        {
+          startDate: "02/11/2024",
+          endDate: "03/11/2024",
+          eventInfo: {
+            name: "Phase 1",
+            backgroundColor: "#FFDA03",
+            color: "#383946",
+            type: "PHASE",
+          },
+        },
+        {
+          startDate: "04/11/2024",
+          endDate: "04/11/2024",
+          eventInfo: {
+            name: "Phase 2",
+            backgroundColor: "#ADD8E6",
+            color: "#383946",
+            type: "PHASE",
+          },
+        },
+      ],
     },
   },
   {
@@ -122,8 +299,8 @@ export const MOCK_CALENDAR_EVENTS = [
       endDate: "03/11/2024",
       backgroundColor: "#9FAAE7",
       color: "#383946",
-      type: 'RELEASE',
-      phases: []
+      type: "RELEASE",
+      phases: [],
     },
   },
   {
@@ -137,8 +314,8 @@ export const MOCK_CALENDAR_EVENTS = [
       endDate: "03/11/2024",
       backgroundColor: "#F2C0BF",
       color: "#383946",
-      type: 'RELEASE',
-      phases: []
+      type: "RELEASE",
+      phases: [],
     },
   },
   {
@@ -152,8 +329,8 @@ export const MOCK_CALENDAR_EVENTS = [
       endDate: "03/11/2024",
       backgroundColor: "#D9DAE5",
       color: "#383946",
-      type: 'RELEASE',
-      phases: []
+      type: "RELEASE",
+      phases: [],
     },
   },
   {
@@ -167,8 +344,8 @@ export const MOCK_CALENDAR_EVENTS = [
       endDate: "22/11/2024",
       backgroundColor: "#6C12BB",
       color: "#FFF",
-      type: 'RELEASE',
-      phases: []
+      type: "RELEASE",
+      phases: [],
     },
   },
   {
@@ -182,8 +359,8 @@ export const MOCK_CALENDAR_EVENTS = [
       endDate: "01/12/2024",
       backgroundColor: "#ADD8E6",
       color: "#383946",
-      type: 'RELEASE',
-      phases: []
+      type: "RELEASE",
+      phases: [],
     },
   },
 ];

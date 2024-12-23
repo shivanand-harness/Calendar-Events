@@ -5,24 +5,42 @@ import ShowMoreEventView from "./ShowMoreEventView";
 import { EventsRowContext } from "../contexts/EventsRowContext";
 import { CalendarContext } from "../contexts/CalendarContext";
 import css from "./EventViews.module.scss";
+import EventView from "./EventView";
+
+function defaultRenderEventView(
+  event: CalendarEventSpec<any>,
+  rowIndex: number
+) {
+  return <EventView event={event} rowIndex={rowIndex} />;
+}
 
 interface CalendarRowEventViewProps<T> {
   eventRows: Array<Array<CalendarEventSpec<T>>>;
   eventsGroupByDate: Array<Array<CalendarEventSpec<T>>>;
   eventsRowTopPadding?: number;
+  renderEventView?: (
+    event: CalendarEventSpec<T>,
+    rowIndex: number
+  ) => JSX.Element;
 }
 
 export default function CalendarRowEventView<T>(
   props: CalendarRowEventViewProps<T>
 ) {
-  const { eventRows, eventsGroupByDate, eventsRowTopPadding } = props;
-  const { showAllEvents, padding, eventHeight, styleUnit } = useContext(CalendarContext);
+  const {
+    eventRows,
+    eventsGroupByDate,
+    eventsRowTopPadding,
+    renderEventView = defaultRenderEventView,
+  } = props;
+  const { showAllEvents, padding, eventHeight, styleUnit } =
+    useContext(CalendarContext);
   const [rowWidth, setRowWidth] = useState(0);
   const [rowHeight, setRowHeight] = useState(0);
   const rowRef = useRef<any>();
 
   const allowedEventRowsToShow = Math.floor(
-    rowHeight / (eventHeight + padding)
+    rowHeight / (eventHeight + padding + padding)
   );
 
   const slicedRows = showAllEvents
@@ -46,12 +64,16 @@ export default function CalendarRowEventView<T>(
     <EventsRowContext.Provider
       value={{ rowHeight, rowWidth, eventHeight: eventHeight }}
     >
-      <div ref={rowRef} className={css.eventsRowsContainer} style={{
-        top: `${eventsRowTopPadding ?? padding}${styleUnit}`
-      }}>
-        {slicedRows.map((each, idx) => (
-          <EventsRowView key={idx} events={each} rowIndex={idx} />
-        ))}
+      <div
+        ref={rowRef}
+        className={css.eventsRowsContainer}
+        style={{
+          top: `${eventsRowTopPadding ?? padding}${styleUnit}`,
+        }}
+      >
+        {slicedRows.map((rowEvents, rowIdx) =>
+          rowEvents.map((event) => renderEventView(event, rowIdx))
+        )}
 
         {eventsGroupByDate.map((each, idx) => (
           <ShowMoreEventView

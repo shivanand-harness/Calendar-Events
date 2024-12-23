@@ -1,99 +1,124 @@
+import { Moment, unitOfTime } from "moment";
+import classNames from "classnames";
+
+import { CalendarEventSpec, EventSpec, View } from "../types";
+import EventView from "../EventViews/EventView";
+import { Calendar } from "../framework/Calendar";
 import CalendarView from "../components/CalendarView/CalendarView";
-import css from "./Views.module.scss";
-import { QuaterViewMonthConfig } from "../types";
+import CalendarRowEventView from "../EventViews/CalendarRowEventView";
+
 import {
+  fillColumns,
+  generateMonthView,
   generateQuaterViewHeaders,
   getCalendarRowsForMultiMonthView,
   getEventsRowByStartDateAndEndDate,
 } from "../utils";
-import CalendarRowEventView from "../EventViews/CalendarRowEventView";
-import classNames from "classnames";
-import { CSSProperties, useContext } from "react";
-import { CalendarContext } from "../contexts/CalendarContext";
 
-interface MonthRowProps {
-  monthConfig: QuaterViewMonthConfig;
-  headers: Array<number>;
-}
+import css from "./Views.module.scss";
 
-function MonthRow(props: MonthRowProps) {
-  const {
-    calendarHeaderCellConfig,
-    calendarCellConfig,
-    calendarRowConfig,
-    events,
-  } = useContext(CalendarContext);
-  const { monthConfig, headers } = props;
-  const { month, startDate, endDate } = monthConfig;
-  const eventRows = getEventsRowByStartDateAndEndDate(
-    events,
-    startDate,
-    endDate
-  );
-  return (
-    <CalendarView.Row
-      className={classNames(calendarRowConfig?.className)}
-      numberOfEventRows={eventRows.calendarRowEvents.length}
-    >
+import { CalendarViewArraySpec, CalendarViewCellSpec } from "./types";
+
+export class QuaterView extends Calendar<
+  CalendarViewArraySpec<CalendarViewCellSpec>,
+  EventSpec<unknown>,
+  CalendarViewCellSpec
+> {
+  name = "Quater";
+  value = View.QUATER;
+
+  numberOfCols = 32;
+  numberOfHeaderCols = 1;
+  startDayOfWeek = 1;
+  defaultTopPadding = 10;
+
+  navigationChangeUnit = "month" as unitOfTime.DurationConstructor;
+  calendarViewWrapperClassName = css.quaterViewCalendarWrapper;
+
+  getStartAndEndDateOfView(currentDate: Moment): {
+    startDate: Moment;
+    endDate: Moment;
+  } {
+    return {
+      startDate: currentDate.clone().startOf("month"),
+      endDate: currentDate.clone().add(2, "months").endOf("month"),
+    };
+  }
+
+  getHeaders = (): string[] => {
+    return generateQuaterViewHeaders(this.numberOfHeaderCols);
+  };
+
+  renderHeaderCell = (header: string, index: number): JSX.Element => {
+    return (
       <CalendarView.HeaderCell
-        className={classNames(
-          css.quaterViewHeaderCol,
-          calendarHeaderCellConfig?.className
-        )}
+        className={index === 0 ? css.quaterViewHeaderCol : null}
+        key={index}
       >
-        {month}
+        {header}
       </CalendarView.HeaderCell>
-      {headers.slice(1).map((_each, idx) => (
-        <CalendarView.Cell key={idx} className={calendarCellConfig?.className}>
-          {calendarCellConfig?.renderer
-            ? calendarCellConfig.renderer(idx)
-            : null}
-        </CalendarView.Cell>
-      ))}
+    );
+  };
+
+  getCalendarViewArray = (
+    currentDate: Moment
+  ): CalendarViewArraySpec<CalendarViewCellSpec>[] => {
+    const monthArr = getCalendarRowsForMultiMonthView(currentDate, 3);
+    const monthViewArr = monthArr.map((each) => ({
+      headers: [{ date: each.startDate, isCurrentMonth: true }],
+      cells: fillColumns(
+        generateMonthView(each.startDate, "month"),
+        this.numberOfCols - this.numberOfHeaderCols
+      ),
+    }));
+    return monthViewArr;
+  };
+
+  renderHeaderColumnCell = (day: CalendarViewCellSpec): JSX.Element => {
+    return (
+      <CalendarView.HeaderCell
+        className={css.quaterViewHeaderCol}
+        key={day.date.format("MMM")}
+      >
+        {day.date.format("MMM")}
+      </CalendarView.HeaderCell>
+    );
+  };
+
+  renderColumnCell = (
+    day: CalendarViewCellSpec,
+    index: number
+  ): JSX.Element => {
+    return <CalendarView.Cell key={index} isCurrentMonth />;
+  };
+
+  renderEventView = (event: any, rowIndex: number): JSX.Element => {
+    return <EventView key={rowIndex} event={event} rowIndex={rowIndex} />;
+  };
+
+  renderEventRows = (
+    row: CalendarViewArraySpec<CalendarViewCellSpec>,
+    events: Array<EventSpec<unknown>>
+  ) => {
+    const startDate = row.cells[0].date;
+    const endDate =
+      row.cells[this.numberOfCols - this.numberOfHeaderCols - 1].date;
+    const eventsForMonthView = events.filter((each) => each.type === "RELEASE");
+    const eventRows = getEventsRowByStartDateAndEndDate(
+      eventsForMonthView,
+      startDate,
+      endDate
+    );
+    return (
       <CalendarRowEventView
+        key={`${startDate.format("YYYY-MM-DD")}-${endDate.format(
+          "YYYY-MM-DD"
+        )}`}
         eventRows={eventRows.calendarRowEvents}
         eventsGroupByDate={eventRows.eventsGroupByDate}
+        eventsRowTopPadding={this.defaultTopPadding}
+        renderEventView={this.renderEventView}
       />
-    </CalendarView.Row>
-  );
-}
-
-export default function QuaterView() {
-  const {
-    currentDate,
-    calendarWrapperConfig,
-    calendarHeaderCellConfig,
-    calendarHeaderRowConfig,
-  } = useContext(CalendarContext);
-  const headers = generateQuaterViewHeaders(1);
-  const calendarRows = getCalendarRowsForMultiMonthView(currentDate, 3);
-  return (
-    <CalendarView
-      className={classNames(
-        css.quaterViewCalendarWrapper,
-        calendarWrapperConfig?.className
-      )}
-      numberOfCols={32}
-      numberOfHeaderCols={1}
-    >
-      <CalendarView.HeaderRow className={calendarHeaderRowConfig?.className}>
-        {headers.map((_each, idx) => (
-          <CalendarView.HeaderCell
-            key={idx}
-            className={calendarHeaderCellConfig?.className}
-          >
-            {calendarHeaderCellConfig?.renderer
-              ? calendarHeaderCellConfig.renderer(idx)
-              : idx}
-          </CalendarView.HeaderCell>
-        ))}
-      </CalendarView.HeaderRow>
-
-      {calendarRows.map((each) => {
-        return (
-          <MonthRow key={each.month} monthConfig={each} headers={headers} />
-        );
-      })}
-    </CalendarView>
-  );
+    );
+  };
 }

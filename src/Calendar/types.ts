@@ -33,8 +33,10 @@ export enum View {
 }
 
 export interface EventSpec<T> {
+  id: number;
   startDate: Moment;
   endDate: Moment;
+  type: string;
   eventInfo: T;
 }
 
@@ -50,7 +52,6 @@ export interface QuaterViewMonthConfig {
   startDate: Moment;
   endDate: Moment;
 }
-
 
 export interface CalendarWrapperConfig {
   className?: string;

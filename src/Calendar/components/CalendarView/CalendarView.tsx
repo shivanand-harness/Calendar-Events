@@ -65,7 +65,7 @@ function Col(props: PropsWithChildren<ColProps>) {
 }
 
 interface RowProps extends CommonProps {
-  numberOfEventRows: number;
+  numberOfEventRows?: number;
   eventsRowTopPadding?: number;
 }
 
@@ -74,10 +74,11 @@ function Row(props: PropsWithChildren<RowProps>) {
     children,
     style,
     className,
-    numberOfEventRows,
+    numberOfEventRows = 0,
     eventsRowTopPadding = 0,
   } = props;
-  const { showAllEvents, eventHeight, padding, styleUnit } = useContext(CalendarContext);
+  const { showAllEvents, eventHeight, padding, styleUnit } =
+    useContext(CalendarContext);
   const height =
     (eventHeight + padding) * numberOfEventRows + eventsRowTopPadding;
   return (

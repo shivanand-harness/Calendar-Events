@@ -1,11 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import moment, { Moment } from "moment";
 
-import DayView from "./Views/DayView";
-import WeekView from "./Views/WeekView";
-import MonthView from "./Views/MonthView";
-
-import QuaterView from "./Views/QuaterView";
 import {
   EventSpec,
   View,
@@ -23,13 +18,17 @@ import NavigationButtons from "./HeaderView/NavigationButtons";
 import css from "./Calendar.module.scss";
 import { CalendarContext } from "./contexts/CalendarContext";
 import { EVENT_HEIGHT, PADDING, STYLE_UNIT } from "./constants";
+import CalendarView from "./Views/CalendarView";
+
+import "./Views/utils";
+import CalendarFactory from "./framework/CalendarFactory";
 
 interface CalendarProps<T> {
   events: Array<EventSpec<T>>;
   startDayOfWeek?: DAY;
   view: View;
   views?: Array<View>;
-  onChange: (view: View, startDate: Moment, endDate: Moment) => void;
+  onChange: (view: View, startDate?: Moment, endDate?: Moment) => void;
   calendarWrapperConfig?: CalendarWrapperConfig;
   calendarHeaderRowConfig?: CalendarHeaderRowConfig;
   calendarHeaderCellConfig?: CalendarHeaderCellConfig;
@@ -50,47 +49,20 @@ export default function Calendar<T>(props: CalendarProps<T>) {
   const [initialised, setInitialised] = useState(false);
   const [showAllEvents, setShowAllEvents] = useState(false);
 
+  const calendarViewInstance = useRef(CalendarFactory.getCalendarType(view));
+
   const getChangeUnit = () => {
-    switch (view) {
-      case View.MONTH:
-        return "months";
-      case View.WEEK:
-        return "weeks";
-      case View.DAY:
-        return "days";
-      default:
-        return "months";
-    }
+    return calendarViewInstance.current?.navigationChangeUnit;
   };
 
-  const getStartAndEndDateOfSelectedView = (view: View, date: Moment) => {
-    switch (view) {
-      case View.MONTH:
-        return {
-          startDate: date.clone().startOf("month"),
-          endDate: date.clone().endOf("month"),
-        };
-      case View.WEEK:
-        return {
-          startDate: date.clone().startOf("week"),
-          endDate: date.clone().endOf("week"),
-        };
-      case View.DAY:
-        return {
-          startDate: date.clone().startOf("day"),
-          endDate: date.clone().endOf("day"),
-        };
-      default:
-        return {
-          startDate: date.clone().startOf("month"),
-          endDate: date.clone().add(2, "months").endOf("month"),
-        };
-    }
+  const getStartAndEndDateOfSelectedView = (date: Moment) => {
+    return calendarViewInstance.current?.getStartAndEndDateOfView(date);
   };
 
   const handleUpdateParent = (view: View, date: Moment) => {
-    const { startDate, endDate } = getStartAndEndDateOfSelectedView(view, date);
-    onChange(view, startDate, endDate);
+    calendarViewInstance.current = CalendarFactory.getCalendarType(view);
+    const response = getStartAndEndDateOfSelectedView(date);
+    onChange(view, response?.startDate, response?.endDate);
   };
 
   const handleChangeCurrentDate = (step: number) => {
@@ -159,10 +131,7 @@ export default function Calendar<T>(props: CalendarProps<T>) {
             />
           </div>
         </div>
-        {view === View.DAY && <DayView />}
-        {view === View.WEEK && <WeekView />}
-        {view === View.MONTH && <MonthView />}
-        {view === View.QUATER && <QuaterView />}
+        <CalendarView />
       </div>
     </CalendarContext.Provider>
   );
