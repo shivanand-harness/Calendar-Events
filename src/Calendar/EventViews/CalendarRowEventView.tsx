@@ -1,11 +1,12 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { CalendarEventSpec } from "../types";
+import { CalendarEventSpec, EventSpec } from "../types";
 import EventsRowView from "./EventsRowView";
 import ShowMoreEventView from "./ShowMoreEventView";
 import { EventsRowContext } from "../contexts/EventsRowContext";
 import { CalendarContext } from "../contexts/CalendarContext";
 import css from "./EventViews.module.scss";
 import EventView from "./EventView";
+import { CalendarRowContext } from "../contexts/CalendarRowContext";
 
 function defaultRenderEventView(
   event: CalendarEventSpec<any>,
@@ -16,7 +17,7 @@ function defaultRenderEventView(
 
 interface CalendarRowEventViewProps<T> {
   eventRows: Array<Array<CalendarEventSpec<T>>>;
-  eventsGroupByDate: Array<Array<CalendarEventSpec<T>>>;
+  eventsGroupByDate: Array<Array<EventSpec<T>>>;
   eventsRowTopPadding?: number;
   renderEventView?: (
     event: CalendarEventSpec<T>,
@@ -30,27 +31,31 @@ export default function CalendarRowEventView<T>(
   const {
     eventRows,
     eventsGroupByDate,
-    eventsRowTopPadding,
+    eventsRowTopPadding = 0,
     renderEventView = defaultRenderEventView,
   } = props;
-  const { showAllEvents, padding, eventHeight, styleUnit } =
-    useContext(CalendarContext);
+  const { compact, padding, eventHeight } = useContext(CalendarContext);
+  const { setHeight } = useContext(CalendarRowContext);
   const [rowWidth, setRowWidth] = useState(0);
   const [rowHeight, setRowHeight] = useState(0);
   const rowRef = useRef<any>();
 
   const allowedEventRowsToShow = Math.floor(
-    rowHeight / (eventHeight + padding + padding)
+    (rowHeight - eventsRowTopPadding - padding) / (eventHeight + padding)
   );
 
-  const slicedRows = showAllEvents
-    ? eventRows
-    : eventRows.slice(0, allowedEventRowsToShow);
+  const slicedRows = compact
+    ? eventRows.slice(0, allowedEventRowsToShow)
+    : eventRows;
 
   const handleUpdateDiamensions = () => {
     setRowWidth(rowRef.current.scrollWidth);
     setRowHeight(rowRef.current.offsetHeight);
   };
+
+  useEffect(() => {
+    setHeight(eventRows.length * (eventHeight + padding) + eventsRowTopPadding);
+  }, [eventRows, eventHeight, padding, eventsRowTopPadding]);
 
   useEffect(() => {
     handleUpdateDiamensions();
@@ -62,15 +67,14 @@ export default function CalendarRowEventView<T>(
 
   return (
     <EventsRowContext.Provider
-      value={{ rowHeight, rowWidth, eventHeight: eventHeight }}
+      value={{
+        rowHeight,
+        rowWidth,
+        eventHeight: eventHeight,
+        eventsRowTopPadding,
+      }}
     >
-      <div
-        ref={rowRef}
-        className={css.eventsRowsContainer}
-        style={{
-          top: `${eventsRowTopPadding ?? padding}${styleUnit}`,
-        }}
-      >
+      <div ref={rowRef} className={css.eventsRowsContainer}>
         {slicedRows.map((rowEvents, rowIdx) =>
           rowEvents.map((event) => renderEventView(event, rowIdx))
         )}

@@ -93,12 +93,12 @@ export function getEventsByRow<T>(
 }
 
 export function getEventsGroupByDate<T>(
-  events: Array<CalendarEventSpec<T>>,
+  events: Array<EventSpec<T>>,
   startDate: Moment,
   endDate: Moment
-) {
+): EventSpec<T>[][] {
   const date = startDate.clone();
-  const eventsGroupByDate: Array<Array<CalendarEventSpec<T>>> = [];
+  const eventsGroupByDate: Array<Array<EventSpec<T>>> = [];
   while (date.clone().startOf("day").isBefore(endDate.endOf("day"))) {
     eventsGroupByDate.push(
       events.filter((each) =>
@@ -119,7 +119,7 @@ export function getEventsRowByStartDateAndEndDate<T>(
   events: Array<EventSpec<T>>,
   startDate: Moment,
   endDate: Moment
-): GetEventsRowByStartDateAndEndDateSpec<T> {
+): CalendarEventSpec<T>[][] {
   const filteredTransformedEvents = events
     .filter((each) => {
       return (
@@ -170,14 +170,7 @@ export function getEventsRowByStartDateAndEndDate<T>(
       return 0;
     });
 
-  return {
-    calendarRowEvents: getEventsByRow(filteredTransformedEvents),
-    eventsGroupByDate: getEventsGroupByDate(
-      filteredTransformedEvents,
-      startDate,
-      endDate
-    ),
-  };
+  return getEventsByRow(filteredTransformedEvents);
 }
 
 export function getChunkArray<T>(

@@ -18,4 +18,8 @@ export default class CalendarFactory {
   getCalendarType(value: string): Calendar | undefined {
     return this.calendarTypeBank.get(value);
   }
+
+  getAllTypes(): Calendar[] {
+    return Array.from(this.calendarTypeBank).map((calendar) => calendar[1]);
+  }
 }

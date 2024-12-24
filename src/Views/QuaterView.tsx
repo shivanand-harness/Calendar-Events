@@ -1,7 +1,6 @@
 import { Moment, unitOfTime } from "moment";
-import classNames from "classnames";
 
-import { CalendarEventSpec, EventSpec, View } from "../Calendar/types";
+import { EventSpec, View } from "../Calendar/types";
 import EventView from "../Calendar/EventViews/EventView";
 import { Calendar } from "../Calendar/framework/Calendar";
 import CalendarView from "../Calendar/components/CalendarView/CalendarView";
@@ -12,6 +11,7 @@ import {
   generateMonthView,
   generateQuaterViewHeaders,
   getCalendarRowsForMultiMonthView,
+  getEventsGroupByDate,
   getEventsRowByStartDateAndEndDate,
 } from "../Calendar/utils";
 
@@ -112,13 +112,18 @@ export class QuaterView extends Calendar<
       startDate,
       endDate
     );
+    const eventsGroupByDate = getEventsGroupByDate(
+      eventsForMonthView,
+      startDate,
+      endDate
+    );
     return (
       <CalendarRowEventView
         key={`${startDate.format("YYYY-MM-DD")}-${endDate.format(
           "YYYY-MM-DD"
         )}`}
-        eventRows={eventRows.calendarRowEvents}
-        eventsGroupByDate={eventRows.eventsGroupByDate}
+        eventRows={eventRows}
+        eventsGroupByDate={eventsGroupByDate}
         eventsRowTopPadding={this.defaultTopPadding}
         renderEventView={this.renderEventView}
       />

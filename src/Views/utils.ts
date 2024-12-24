@@ -5,6 +5,6 @@ import { WeekView } from "./WeekView";
 
 export const factory = new CalendarFactory();
 
+factory.registerCalendarType(new WeekView());
 factory.registerCalendarType(new MonthView());
 factory.registerCalendarType(new QuaterView());
-factory.registerCalendarType(new WeekView());

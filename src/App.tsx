@@ -1,15 +1,20 @@
-import moment from "moment";
-import { useMemo, useState } from "react";
+import moment, { Moment } from "moment";
+import { useEffect, useMemo, useState } from "react";
 
 import { factory } from "./Views/utils";
 import Calendar from "./Calendar/Calendar";
 import { View, DAY } from "./Calendar/types";
 import { MOCK_CALENDAR_EVENTS_V2 } from "./mockData";
 
+import css from "./app.module.scss";
 import "./styles.css";
+import { updateMomentStarOfWeekConfig } from "./Calendar/utils";
 
 export default function App() {
+  const [initialised, setInitialised] = useState(false);
   const [view, setView] = useState(View.MONTH);
+  const [compactView, setCompactView] = useState(true);
+  const [currentDate, setCurrentDate] = useState<Moment>(moment());
 
   const eventsV2 = useMemo(() => {
     return MOCK_CALENDAR_EVENTS_V2.map((each) => ({
@@ -23,15 +28,50 @@ export default function App() {
     }));
   }, []);
 
+  const renderRightCustomActions = () => {
+    return (
+      <label className={css.checkbox}>
+        <input
+          checked={!compactView}
+          type="checkbox"
+          value="SHOW_ALL_EVENTS"
+          onChange={(evt) => {
+            setCompactView(!evt.target.checked);
+          }}
+        />
+        <span>Show all events</span>
+      </label>
+    );
+  };
+
+  useEffect(() => {
+    updateMomentStarOfWeekConfig(DAY.MON);
+    setCurrentDate(moment());
+    setInitialised(true);
+    return () => {
+      updateMomentStarOfWeekConfig(DAY.SUN);
+    };
+  }, []);
+
+  if (!initialised) return <></>;
+
   return (
     <div className="App">
       <Calendar
         events={eventsV2}
         view={view}
         factory={factory}
-        startDayOfWeek={DAY.MON}
-        views={[View.MONTH, View.WEEK, View.DAY, View.QUATER]}
-        onChange={setView}
+        onChange={(view, newCurrentDate) => {
+          setView(view);
+          setCurrentDate(newCurrentDate);
+        }}
+        currentDate={currentDate}
+        rightCustomActions={renderRightCustomActions()}
+        compact={compactView}
+        calendarWrapperConfig={{
+          className:
+            view === View.QUATER ? css.quaterViewCalendarWrapper : null,
+        }}
       />
     </div>
   );

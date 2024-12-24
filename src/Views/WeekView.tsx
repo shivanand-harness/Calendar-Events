@@ -8,6 +8,7 @@ import CalendarRowEventView from "../Calendar/EventViews/CalendarRowEventView";
 import { EventSpec, View } from "../Calendar/types";
 import {
   generateWeekView,
+  getEventsGroupByDate,
   getEventsRowByStartDateAndEndDate,
 } from "../Calendar/utils";
 import {
@@ -99,13 +100,18 @@ export class WeekView extends Calendar<
       startDate,
       endDate
     );
+    const eventsGroupByDate = getEventsGroupByDate(
+      eventsListForWeekView,
+      startDate,
+      endDate
+    );
     return (
       <CalendarRowEventView
         key={`${startDate.format("YYYY-MM-DD")}-${endDate.format(
           "YYYY-MM-DD"
         )}`}
-        eventRows={eventRows.calendarRowEvents}
-        eventsGroupByDate={eventRows.eventsGroupByDate}
+        eventRows={eventRows}
+        eventsGroupByDate={eventsGroupByDate}
         eventsRowTopPadding={this.defaultTopPadding}
         renderEventView={this.renderEventView}
       />

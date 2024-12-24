@@ -1,9 +1,10 @@
 import classNames from "classnames";
-import { CSSProperties, PropsWithChildren, useContext } from "react";
+import { CSSProperties, PropsWithChildren, useContext, useState } from "react";
 
 import { CalendarViewContext } from "../../contexts/CalendarViewContext";
 import css from "./CalendarView.module.scss";
 import { CalendarContext } from "../../contexts/CalendarContext";
+import { CalendarRowContext } from "../../contexts/CalendarRowContext";
 
 interface CommonProps {
   className?: string;
@@ -70,29 +71,25 @@ interface RowProps extends CommonProps {
 }
 
 function Row(props: PropsWithChildren<RowProps>) {
-  const {
-    children,
-    style,
-    className,
-    numberOfEventRows = 0,
-    eventsRowTopPadding = 0,
-  } = props;
-  const { showAllEvents, eventHeight, padding, styleUnit } =
-    useContext(CalendarContext);
-  const height =
-    (eventHeight + padding) * numberOfEventRows + eventsRowTopPadding;
+  const { children, style, className } = props;
+  const { compact, styleUnit } = useContext(CalendarContext);
+
+  const [height, setHeight] = useState(0);
+  console.log(height);
   return (
-    <div
-      className={classNames(className, css.tableRow, {
-        [css.showAllEvents]: showAllEvents,
-      })}
-      style={{
-        ...style,
-        height: showAllEvents ? `${height}${styleUnit}` : style?.height,
-      }}
-    >
-      {children}
-    </div>
+    <CalendarRowContext.Provider value={{ setHeight }}>
+      <div
+        className={classNames(className, css.tableRow, {
+          [css.compact]: compact,
+        })}
+        style={{
+          ...style,
+          height: compact ? style?.height : `${height}${styleUnit}`,
+        }}
+      >
+        {children}
+      </div>
+    </CalendarRowContext.Provider>
   );
 }
 

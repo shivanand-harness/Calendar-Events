@@ -10,6 +10,7 @@ import {
   generateMonthView,
   generateMonthViewHeaders,
   getChunkArray,
+  getEventsGroupByDate,
   getEventsRowByStartDateAndEndDate,
 } from "../Calendar/utils";
 import EventView from "../Calendar/EventViews/EventView";
@@ -97,11 +98,16 @@ export class MonthView extends Calendar<
       startDate,
       endDate
     );
+    const eventsGroupByDate = getEventsGroupByDate(
+      eventsForMonthView,
+      startDate,
+      endDate
+    );
     return (
       <CalendarRowEventView
         key={`${startDate.format()}-${endDate.format()}`}
-        eventRows={eventRows.calendarRowEvents}
-        eventsGroupByDate={eventRows.eventsGroupByDate}
+        eventRows={eventRows}
+        eventsGroupByDate={eventsGroupByDate}
         eventsRowTopPadding={this.defaultTopPadding}
         renderEventView={this.renderEventView}
       />

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useMemo, useRef } from "react";
 import classNames from "classnames";
 
 import { CalendarContext } from "./contexts/CalendarContext";
@@ -27,7 +27,6 @@ export default function Views() {
       {calendarViewInstance
         .getCalendarViewArray(currentDate, events)
         .map((row, index) => {
-          console.log(row);
           return (
             <CalendarView.Row key={index}>
               {row.headers.map((each) =>

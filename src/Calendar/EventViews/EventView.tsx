@@ -24,12 +24,13 @@ export default function EventView<T>(props: EventViewProps<T>) {
   const { name, backgroundColor, color } = eventInfo as any;
 
   const { numberOfCols, numberOfHeaderCols } = useContext(CalendarViewContext);
-  const { rowWidth, eventHeight } = useContext(EventsRowContext);
+  const { rowWidth, eventHeight, eventsRowTopPadding } =
+    useContext(EventsRowContext);
   const { padding, styleUnit } = useContext(CalendarContext);
   const colWidth = rowWidth / numberOfCols;
 
   // top = row index * (each event height + gap between events)
-  const top = rowIndex * (eventHeight + padding);
+  const top = eventsRowTopPadding + rowIndex * (eventHeight + padding);
   // width = col width * number of days the event is spanned - horizontal padding * 2 side
   let width = colWidth * span - padding * 2;
   // left position = col width * (number of columns to left + number of header cols if any) + horizontal padding to left

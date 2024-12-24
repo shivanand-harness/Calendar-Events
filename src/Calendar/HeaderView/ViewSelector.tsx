@@ -3,23 +3,19 @@ import { AllowedCalendarViewList } from "../constants";
 import { View } from "../types";
 
 import css from "./headerView.module.scss";
+import { Calendar } from "../framework/Calendar";
 
 interface ViewSelectorProps {
   activeView: View;
   onChange: (view: View) => void;
-  allowedViews?: Array<View>;
+  views: Array<Calendar>;
 }
 
 export default function ViewSelector(props: ViewSelectorProps) {
-  const { allowedViews } = props;
+  const { views } = props;
   return (
     <div className={css.actionButtons}>
-      {AllowedCalendarViewList.filter((each) => {
-        if (allowedViews) {
-          return allowedViews.includes(each.value);
-        }
-        return true;
-      }).map((each) => (
+      {views.map((each) => (
         <button
           key={each.value}
           className={classNames({
@@ -27,7 +23,7 @@ export default function ViewSelector(props: ViewSelectorProps) {
           })}
           onClick={() => props.onChange(each.value)}
         >
-          {each.label}
+          {each.name}
         </button>
       ))}
     </div>

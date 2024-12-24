@@ -1,12 +1,6 @@
-.quaterViewCalendarWrapper {
-  --calendar-column-width: 150px;
-  width: 100%;
-  overflow: auto;
-
-  & .quaterViewHeaderCol {
-    background-color: #f3f3fa;
-    position: sticky;
-    left: 0px;
-    z-index: 10;
-  }
+.quaterViewHeaderCol {
+  background-color: #f3f3fa;
+  position: sticky;
+  left: 0px;
+  z-index: 10;
 }
