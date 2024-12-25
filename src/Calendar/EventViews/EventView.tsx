@@ -2,7 +2,7 @@ import { CalendarEventSpec } from "../types";
 
 import styles from "./EventViews.module.scss";
 import classNames from "classnames";
-import { useContext } from "react";
+import { PropsWithChildren, useContext } from "react";
 import { EventsRowContext } from "../contexts/EventsRowContext";
 import { CalendarViewContext } from "../contexts/CalendarViewContext";
 import { CalendarContext } from "../contexts/CalendarContext";
@@ -12,8 +12,10 @@ interface EventViewProps<T> {
   rowIndex: number;
 }
 
-export default function EventView<T>(props: EventViewProps<T>) {
-  const { event, rowIndex } = props;
+export default function EventView<T>(
+  props: PropsWithChildren<EventViewProps<T>>
+) {
+  const { event, rowIndex, children } = props;
   const {
     eventInfo = {},
     span,
@@ -49,14 +51,14 @@ export default function EventView<T>(props: EventViewProps<T>) {
         }}
         className={styles.event}
       >
-        {name}
+        {children ?? name}
         {startDateOverLapping && (
           <div
             className={classNames(styles.overLapping, styles.leftOverLapping)}
             style={{
               height: `${eventHeight}${styleUnit}`,
-              borderTopWidth: `${padding}${styleUnit}`,
-              borderBottomWidth: `${padding}${styleUnit}`,
+              borderTopWidth: `${eventHeight / 2}${styleUnit}`,
+              borderBottomWidth: `${eventHeight / 2}${styleUnit}`,
               borderRightWidth: `${padding - 1}${styleUnit}`,
               borderRightColor: backgroundColor,
             }}
@@ -67,8 +69,8 @@ export default function EventView<T>(props: EventViewProps<T>) {
             className={classNames(styles.overLapping, styles.rightOverLapping)}
             style={{
               height: `${eventHeight}${styleUnit}`,
-              borderTopWidth: `${padding}${styleUnit}`,
-              borderBottomWidth: `${padding}${styleUnit}`,
+              borderTopWidth: `${eventHeight / 2}${styleUnit}`,
+              borderBottomWidth: `${eventHeight / 2}${styleUnit}`,
               borderLeftWidth: `${padding - 1}${styleUnit}`,
               borderLeftColor: backgroundColor,
             }}

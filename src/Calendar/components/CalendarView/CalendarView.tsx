@@ -75,7 +75,6 @@ function Row(props: PropsWithChildren<RowProps>) {
   const { compact, styleUnit } = useContext(CalendarContext);
 
   const [height, setHeight] = useState(0);
-  console.log(height);
   return (
     <CalendarRowContext.Provider value={{ setHeight }}>
       <div

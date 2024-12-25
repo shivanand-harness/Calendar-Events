@@ -1,24 +1,22 @@
 .event {
-  background-color: blue;
-  border-radius: 4px;
   position: absolute;
-  height: 30px;
-  top: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   color: #fff;
-  font-size: 12px;
+  background-color: blue;
+  border-radius: var(--calendar-event-border-radius, 4px);
+  font-size: var(--calendar-event-font-size, 12px);
 }
 
 .start_overlapping {
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .end_overlapping {
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .overLapping {
@@ -29,13 +27,13 @@
 
 .rightOverLapping {
   right: -7px;
-  border-right-width: 0px;
+  border-right-width: 0;
   border-left-color: blue;
 }
 
 .leftOverLapping {
   left: -7px;
-  border-left-width: 0px;
+  border-left-width: 0;
   border-right-color: blue;
 }
 
@@ -44,7 +42,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 12px;
+  font-size: var(--calendar-event-font-size, 12px);
   color: #383946;
 }
 

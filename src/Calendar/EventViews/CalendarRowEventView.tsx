@@ -40,9 +40,13 @@ export default function CalendarRowEventView<T>(
   const [rowHeight, setRowHeight] = useState(0);
   const rowRef = useRef<any>();
 
-  const allowedEventRowsToShow = Math.floor(
-    (rowHeight - eventsRowTopPadding - padding) / (eventHeight + padding)
+  let allowedEventRowsToShow = Math.floor(
+    (rowHeight - eventsRowTopPadding) / (eventHeight + padding)
   );
+
+  if (eventRows.length > allowedEventRowsToShow) {
+    allowedEventRowsToShow = allowedEventRowsToShow - 1;
+  }
 
   const slicedRows = compact
     ? eventRows.slice(0, allowedEventRowsToShow)

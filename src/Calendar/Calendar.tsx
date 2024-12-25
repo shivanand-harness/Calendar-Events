@@ -33,6 +33,7 @@ interface CalendarProps<T> {
     startDate?: Moment,
     endDate?: Moment
   ) => void;
+  padding?: number;
   compact?: boolean;
   calendarWrapperConfig?: CalendarWrapperConfig;
   calendarHeaderRowConfig?: CalendarHeaderRowConfig;
@@ -53,6 +54,7 @@ export default function Calendar<T>(props: CalendarProps<T>) {
     leftCustomActions,
     compact,
     currentDate,
+    padding = PADDING,
     ...rest
   } = props;
 
@@ -90,7 +92,7 @@ export default function Calendar<T>(props: CalendarProps<T>) {
         currentDate,
         events,
         eventHeight: EVENT_HEIGHT,
-        padding: PADDING,
+        padding,
         styleUnit: STYLE_UNIT,
         factory,
         compact: compact ?? true,

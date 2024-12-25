@@ -1,6 +1,6 @@
 import { Moment, unitOfTime } from "moment";
 
-import { EventSpec, View } from "../Calendar/types";
+import { CalendarEventSpec, EventSpec, View } from "../Calendar/types";
 import EventView from "../Calendar/EventViews/EventView";
 import { Calendar } from "../Calendar/framework/Calendar";
 import CalendarView from "../Calendar/components/CalendarView/CalendarView";
@@ -33,7 +33,7 @@ export class QuaterView extends Calendar<
   numberOfCols = 32;
   numberOfHeaderCols = 1;
   startDayOfWeek = 1;
-  defaultTopPadding = 10;
+  eventsRowTopPadding = 10;
 
   navigationChangeUnit = "month" as unitOfTime.DurationConstructor;
   calendarViewWrapperClassName = css.quaterViewCalendarWrapper;
@@ -63,9 +63,7 @@ export class QuaterView extends Calendar<
     );
   };
 
-  getCalendarViewArray = (
-    currentDate: Moment
-  ): CalendarViewArraySpec<CalendarViewCellSpec>[] => {
+  getCalendarViewArray = (currentDate: Moment) => {
     const monthArr = getCalendarRowsForMultiMonthView(currentDate, 3);
     const monthViewArr = monthArr.map((each) => ({
       headers: [{ date: each.startDate, isCurrentMonth: true }],
@@ -95,13 +93,16 @@ export class QuaterView extends Calendar<
     return <CalendarView.Cell key={index} isCurrentMonth />;
   };
 
-  renderEventView = (event: any, rowIndex: number): JSX.Element => {
+  renderEventView = (
+    event: CalendarEventSpec,
+    rowIndex: number
+  ): JSX.Element => {
     return <EventView key={rowIndex} event={event} rowIndex={rowIndex} />;
   };
 
   renderEventRows = (
     row: CalendarViewArraySpec<CalendarViewCellSpec>,
-    events: Array<EventSpec<unknown>>
+    events: EventSpec[]
   ) => {
     const startDate = row.cells[0].date;
     const endDate =
@@ -124,7 +125,7 @@ export class QuaterView extends Calendar<
         )}`}
         eventRows={eventRows}
         eventsGroupByDate={eventsGroupByDate}
-        eventsRowTopPadding={this.defaultTopPadding}
+        eventsRowTopPadding={this.eventsRowTopPadding}
         renderEventView={this.renderEventView}
       />
     );

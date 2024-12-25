@@ -28,7 +28,7 @@
     min-width: min-content;
 
     position: sticky;
-    top: 0px;
+    top: 0;
     background: white;
     z-index: 11;
   }
@@ -37,7 +37,7 @@
     border-bottom: 1px solid #d9dae5;
     border-right: 1px solid #d9dae5;
     text-align: right;
-    padding: 10px;
+    padding: var(--calendar-cell-padding, 10px);
     color: #383946;
   }
 

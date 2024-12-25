@@ -32,7 +32,7 @@ export enum View {
   QUATER = "QUATER",
 }
 
-export interface EventSpec<T> {
+export interface EventSpec<T = unknown> {
   id: number;
   startDate: Moment;
   endDate: Moment;
@@ -40,7 +40,7 @@ export interface EventSpec<T> {
   eventInfo: T;
 }
 
-export interface CalendarEventSpec<T> extends EventSpec<T> {
+export interface CalendarEventSpec<T = unknown> extends EventSpec<T> {
   span: number;
   startDateOverLapping: boolean;
   endDateOverLapping: boolean;

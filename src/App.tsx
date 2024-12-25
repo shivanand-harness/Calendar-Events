@@ -53,6 +53,15 @@ export default function App() {
     };
   }, []);
 
+  const getCalendarWrapperClassName = () => {
+    switch (view) {
+      case View.QUATER:
+        return css.quaterViewCalendarWrapper;
+      default:
+        return "";
+    }
+  };
+
   if (!initialised) return <></>;
 
   return (
@@ -61,16 +70,15 @@ export default function App() {
         events={eventsV2}
         view={view}
         factory={factory}
+        compact={compactView}
+        currentDate={currentDate}
         onChange={(view, newCurrentDate) => {
           setView(view);
           setCurrentDate(newCurrentDate);
         }}
-        currentDate={currentDate}
         rightCustomActions={renderRightCustomActions()}
-        compact={compactView}
         calendarWrapperConfig={{
-          className:
-            view === View.QUATER ? css.quaterViewCalendarWrapper : null,
+          className: getCalendarWrapperClassName(),
         }}
       />
     </div>

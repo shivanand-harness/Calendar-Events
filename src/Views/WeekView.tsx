@@ -17,8 +17,8 @@ import {
 } from "../Calendar/framework/types";
 
 export class WeekView extends Calendar<
-  CalendarViewArraySpec<EventSpec<unknown>>,
-  EventSpec<unknown>,
+  CalendarViewArraySpec<EventSpec>,
+  EventSpec,
   CalendarViewCellSpec
 > {
   name = "Week";
@@ -26,21 +26,18 @@ export class WeekView extends Calendar<
   numberOfCols = 8;
   numberOfHeaderCols = 1;
   startDayOfWeek = 1;
-  defaultTopPadding = 10;
+  eventsRowTopPadding = 10;
 
   navigationChangeUnit = "week" as moment.DurationInputArg2;
 
-  getStartAndEndDateOfView(currentDate: Moment): {
-    startDate: Moment;
-    endDate: Moment;
-  } {
+  getStartAndEndDateOfView(currentDate: Moment) {
     return {
       startDate: currentDate.clone().startOf("week"),
       endDate: currentDate.clone().endOf("week"),
     };
   }
 
-  getHeaders = (currentDate: Moment): Array<string> => {
+  getHeaders = (currentDate: Moment) => {
     return [
       "Releases",
       ...generateWeekView(currentDate).map((each) =>
@@ -57,8 +54,8 @@ export class WeekView extends Calendar<
 
   getCalendarViewArray = (
     currentDate: Moment,
-    events: Array<EventSpec<unknown>>
-  ): CalendarViewArraySpec<EventSpec<unknown>>[] => {
+    events: EventSpec[]
+  ): CalendarViewArraySpec<EventSpec>[] => {
     const releaseEvents = events.filter((each: any) => each.type === "RELEASE");
     return releaseEvents.map((each: EventSpec<unknown>) => ({
       headers: [{ ...each }],
@@ -66,7 +63,7 @@ export class WeekView extends Calendar<
     }));
   };
 
-  renderHeaderColumnCell = (event: EventSpec<unknown>): JSX.Element => {
+  renderHeaderColumnCell = (event: EventSpec): JSX.Element => {
     const { eventInfo } = event;
     const { name } = eventInfo as any;
     return <CalendarView.HeaderCell key={name}>{name}</CalendarView.HeaderCell>;
@@ -83,8 +80,8 @@ export class WeekView extends Calendar<
   };
 
   renderEventRows = (
-    row: CalendarViewArraySpec<EventSpec<unknown>>,
-    events: Array<EventSpec<unknown>>
+    row: CalendarViewArraySpec<EventSpec>,
+    events: EventSpec[]
   ) => {
     const startDate = row.cells[0].date;
     const endDate =
@@ -112,7 +109,7 @@ export class WeekView extends Calendar<
         )}`}
         eventRows={eventRows}
         eventsGroupByDate={eventsGroupByDate}
-        eventsRowTopPadding={this.defaultTopPadding}
+        eventsRowTopPadding={this.eventsRowTopPadding}
         renderEventView={this.renderEventView}
       />
     );

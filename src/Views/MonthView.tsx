@@ -18,10 +18,11 @@ import {
   CalendarViewArraySpec,
   CalendarViewCellSpec,
 } from "../Calendar/framework/types";
+import { EventType } from "../type";
 
 export class MonthView extends Calendar<
-  CalendarViewArraySpec,
-  EventSpec<unknown>,
+  CalendarViewArraySpec<EventType>,
+  EventSpec<EventType>,
   CalendarViewCellSpec
 > {
   name = "Month";
@@ -29,13 +30,10 @@ export class MonthView extends Calendar<
   numberOfCols = 7;
   numberOfHeaderCols = 0;
   startDayOfWeek = 1;
-  defaultTopPadding = DEFAULT_TOP_PADDING;
+  eventsRowTopPadding = DEFAULT_TOP_PADDING;
   navigationChangeUnit = "month" as unitOfTime.DurationConstructor;
 
-  getStartAndEndDateOfView(currentDate: Moment): {
-    startDate: Moment;
-    endDate: Moment;
-  } {
+  getStartAndEndDateOfView(currentDate: Moment) {
     return {
       startDate: currentDate.clone().startOf("month").startOf("week"),
       endDate: currentDate.clone().endOf("month").endOf("week"),
@@ -52,7 +50,9 @@ export class MonthView extends Calendar<
     );
   };
 
-  getCalendarViewArray = (currentDate: Moment): CalendarViewArraySpec[] => {
+  getCalendarViewArray = (
+    currentDate: Moment
+  ): CalendarViewArraySpec<EventType>[] => {
     const monthArr = generateMonthView(currentDate);
     const chunkArray = getChunkArray(monthArr, this.numberOfCols);
     return chunkArray.map((each) => ({ cells: each, headers: [] }));
@@ -74,7 +74,7 @@ export class MonthView extends Calendar<
   };
 
   renderEventView = (
-    event: CalendarEventSpec<unknown>,
+    event: CalendarEventSpec<EventType>,
     rowIndex: number
   ): JSX.Element => {
     return (
@@ -82,13 +82,16 @@ export class MonthView extends Calendar<
         key={`${rowIndex}-${event.id}`}
         event={event}
         rowIndex={rowIndex}
-      />
+      >
+        {event.eventInfo.name} &nbsp;
+        {event.eventInfo.type}
+      </EventView>
     );
   };
 
   renderEventRows = (
-    row: CalendarViewArraySpec,
-    events: Array<EventSpec<unknown>>
+    row: CalendarViewArraySpec<EventType>,
+    events: EventSpec<EventType>[]
   ) => {
     const startDate = row.cells[0].date;
     const endDate = row.cells[this.numberOfCols - 1].date;
@@ -108,7 +111,7 @@ export class MonthView extends Calendar<
         key={`${startDate.format()}-${endDate.format()}`}
         eventRows={eventRows}
         eventsGroupByDate={eventsGroupByDate}
-        eventsRowTopPadding={this.defaultTopPadding}
+        eventsRowTopPadding={this.eventsRowTopPadding}
         renderEventView={this.renderEventView}
       />
     );

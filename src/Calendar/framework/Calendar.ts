@@ -4,7 +4,7 @@ import { CalendarViewArraySpec, CalendarViewCellSpec } from "./types";
 
 export abstract class Calendar<
   T1 extends CalendarViewArraySpec = CalendarViewArraySpec,
-  T2 extends EventSpec<unknown> = EventSpec<unknown>,
+  T2 extends EventSpec = EventSpec,
   T3 extends CalendarViewCellSpec = CalendarViewCellSpec
 > {
   abstract name: string;
@@ -12,7 +12,7 @@ export abstract class Calendar<
   abstract numberOfCols: number;
   abstract numberOfHeaderCols: number;
   abstract startDayOfWeek: number;
-  abstract defaultTopPadding: number;
+  abstract eventsRowTopPadding: number;
   abstract navigationChangeUnit: moment.DurationInputArg2;
   calendarViewWrapperClassName?: string;
 
