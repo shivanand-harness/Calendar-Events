@@ -1,7 +1,7 @@
 export interface EventType {
   name: string;
-  id: string;
-  parentEventId: string;
+  id: number;
   type: string;
-  status: string;
+  status?: string;
+  parentEventId?: number;
 }

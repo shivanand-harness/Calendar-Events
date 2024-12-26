@@ -19,14 +19,11 @@ import {
   CalendarViewArraySpec,
   CalendarViewCellSpec,
 } from "../Calendar/framework/types";
+import { EventType } from "../type";
 
 import css from "./Views.module.scss";
 
-export class QuaterView extends Calendar<
-  CalendarViewArraySpec<CalendarViewCellSpec>,
-  EventSpec<unknown>,
-  CalendarViewCellSpec
-> {
+export class QuaterView extends Calendar<EventType, CalendarViewCellSpec> {
   name = "Quater";
   value = View.QUATER;
 
@@ -87,14 +84,14 @@ export class QuaterView extends Calendar<
   };
 
   renderColumnCell = (
-    day: CalendarViewCellSpec,
+    _day: CalendarViewCellSpec,
     index: number
   ): JSX.Element => {
     return <CalendarView.Cell key={index} isCurrentMonth />;
   };
 
   renderEventView = (
-    event: CalendarEventSpec,
+    event: CalendarEventSpec<EventType>,
     rowIndex: number
   ): JSX.Element => {
     return <EventView key={rowIndex} event={event} rowIndex={rowIndex} />;
@@ -102,7 +99,7 @@ export class QuaterView extends Calendar<
 
   renderEventRows = (
     row: CalendarViewArraySpec<CalendarViewCellSpec>,
-    events: EventSpec[]
+    events: EventSpec<EventType>[]
   ) => {
     const startDate = row.cells[0].date;
     const endDate =

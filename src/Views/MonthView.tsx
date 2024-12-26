@@ -20,11 +20,7 @@ import {
 } from "../Calendar/framework/types";
 import { EventType } from "../type";
 
-export class MonthView extends Calendar<
-  CalendarViewArraySpec<EventType>,
-  EventSpec<EventType>,
-  CalendarViewCellSpec
-> {
+export class MonthView extends Calendar<EventType> {
   name = "Month";
   value = View.MONTH;
   numberOfCols = 7;

@@ -3,12 +3,13 @@ import { useEffect, useMemo, useState } from "react";
 
 import { factory } from "./Views/utils";
 import Calendar from "./Calendar/Calendar";
-import { View, DAY } from "./Calendar/types";
+import { View, DAY, EventSpec } from "./Calendar/types";
 import { MOCK_CALENDAR_EVENTS_V2 } from "./mockData";
 
 import css from "./app.module.scss";
 import "./styles.css";
 import { updateMomentStarOfWeekConfig } from "./Calendar/utils";
+import { EventType } from "./type";
 
 export default function App() {
   const [initialised, setInitialised] = useState(false);
@@ -16,7 +17,7 @@ export default function App() {
   const [compactView, setCompactView] = useState(true);
   const [currentDate, setCurrentDate] = useState<Moment>(moment());
 
-  const eventsV2 = useMemo(() => {
+  const eventsV2: Array<EventSpec<EventType>> = useMemo(() => {
     return MOCK_CALENDAR_EVENTS_V2.map((each) => ({
       id: each.id,
       startDate: moment(each.startDate, "DD/MM/YYYY"),

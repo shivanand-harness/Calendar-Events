@@ -5,7 +5,7 @@ import { Calendar } from "../Calendar/framework/Calendar";
 import CalendarView from "../Calendar/components/CalendarView/CalendarView";
 import CalendarRowEventView from "../Calendar/EventViews/CalendarRowEventView";
 
-import { EventSpec, View } from "../Calendar/types";
+import { CalendarEventSpec, EventSpec, View } from "../Calendar/types";
 import {
   generateWeekView,
   getEventsGroupByDate,
@@ -15,12 +15,9 @@ import {
   CalendarViewArraySpec,
   CalendarViewCellSpec,
 } from "../Calendar/framework/types";
+import { EventType } from "../type";
 
-export class WeekView extends Calendar<
-  CalendarViewArraySpec<EventSpec>,
-  EventSpec,
-  CalendarViewCellSpec
-> {
+export class WeekView extends Calendar<EventType, EventSpec<EventType>> {
   name = "Week";
   value = View.WEEK;
   numberOfCols = 8;
@@ -54,18 +51,18 @@ export class WeekView extends Calendar<
 
   getCalendarViewArray = (
     currentDate: Moment,
-    events: EventSpec[]
-  ): CalendarViewArraySpec<EventSpec>[] => {
-    const releaseEvents = events.filter((each: any) => each.type === "RELEASE");
-    return releaseEvents.map((each: EventSpec<unknown>) => ({
+    events: EventSpec<EventType>[]
+  ) => {
+    const releaseEvents = events.filter((each) => each.type === "RELEASE");
+    return releaseEvents.map((each) => ({
       headers: [{ ...each }],
       cells: generateWeekView(currentDate),
     }));
   };
 
-  renderHeaderColumnCell = (event: EventSpec): JSX.Element => {
+  renderHeaderColumnCell = (event: EventSpec<EventType>): JSX.Element => {
     const { eventInfo } = event;
-    const { name } = eventInfo as any;
+    const { name } = eventInfo;
     return <CalendarView.HeaderCell key={name}>{name}</CalendarView.HeaderCell>;
   };
 
@@ -75,13 +72,16 @@ export class WeekView extends Calendar<
     );
   };
 
-  renderEventView = (event: any, rowIndex: number): JSX.Element => {
+  renderEventView = (
+    event: CalendarEventSpec<EventType>,
+    rowIndex: number
+  ): JSX.Element => {
     return <EventView key={rowIndex} event={event} rowIndex={rowIndex} />;
   };
 
   renderEventRows = (
-    row: CalendarViewArraySpec<EventSpec>,
-    events: EventSpec[]
+    row: CalendarViewArraySpec<EventSpec<EventType>>,
+    events: EventSpec<EventType>[]
   ) => {
     const startDate = row.cells[0].date;
     const endDate =

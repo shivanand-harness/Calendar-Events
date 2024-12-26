@@ -1,11 +1,10 @@
 import { Moment } from "moment";
-import { EventSpec, View } from "../types";
+import { CalendarEventSpec, EventSpec, View } from "../types";
 import { CalendarViewArraySpec, CalendarViewCellSpec } from "./types";
 
 export abstract class Calendar<
-  T1 extends CalendarViewArraySpec = CalendarViewArraySpec,
-  T2 extends EventSpec = EventSpec,
-  T3 extends CalendarViewCellSpec = CalendarViewCellSpec
+  EVENT_SPEC = unknown,
+  HEADER_CELL_SPEC = EVENT_SPEC
 > {
   abstract name: string;
   abstract value: View;
@@ -23,9 +22,21 @@ export abstract class Calendar<
 
   abstract getHeaders(currentDate: Moment): string[];
   abstract renderHeaderCell(header: string, index: number): JSX.Element;
-  abstract getCalendarViewArray(currentDate: Moment, events: T2[]): Array<T1>;
+  abstract getCalendarViewArray(
+    currentDate: Moment,
+    events: EventSpec<EVENT_SPEC>[]
+  ): Array<CalendarViewArraySpec<HEADER_CELL_SPEC>>;
   abstract renderHeaderColumnCell(prop: any): JSX.Element;
-  abstract renderColumnCell(day: T3, index: number): JSX.Element;
-  abstract renderEventView(calendarEvent: T2, rowIndex: number): JSX.Element;
-  abstract renderEventRows(row: T1, events: T2[]): JSX.Element;
+  abstract renderColumnCell(
+    day: CalendarViewCellSpec,
+    index: number
+  ): JSX.Element;
+  abstract renderEventView(
+    calendarEvent: CalendarEventSpec<EVENT_SPEC>,
+    rowIndex: number
+  ): JSX.Element;
+  abstract renderEventRows(
+    row: CalendarViewArraySpec,
+    events: EventSpec<EVENT_SPEC>[]
+  ): JSX.Element;
 }
