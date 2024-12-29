@@ -1,0 +1,89 @@
+.eventsRowsContainer {
+  --event-height: var(--event-height-override, 20px);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.event {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--calendar-event-border-radius, 4px);
+  font-size: var(--calendar-event-font-size, 12px);
+
+  // calculations
+  // eventWidth = columnWidth * eventSpan - columnPadding * 2
+  --event-width: calc(
+    var(--column-width) * var(--event-span) - var(--column-padding) * 2
+  );
+  // eventLeft = columnWidth * (eventLeftSpan + headerColumns) + columnPadding
+  --event-left: calc(
+    var(--column-width) * (var(--event-left-span) + var(--header-columns)) +
+      var(--column-padding)
+  );
+  // eventTop = eventDefaultTopPadding + eventRowIndex * (eventHeight + eventMargin)
+  --event-top: calc(
+    var(--event-default-top-padding, var(--column-padding)) + var(--event-row) *
+      (var(--event-height) + var(--event-margin, var(--column-padding)))
+  );
+  width: var(--event-width);
+  top: var(--event-top);
+  left: var(--event-left);
+  height: var(--event-height);
+  background-color: var(--event-background-color, blue);
+  color: var(--event-font-color, #fff);
+}
+
+.overLapping {
+  position: absolute;
+  border-style: solid;
+  border-color: transparent;
+  height: var(--event-height);
+  border-top-width: calc(var(--event-height) / 2);
+  border-bottom-width: calc(var(--event-height) / 2);
+}
+
+.rightOverLapping {
+  right: -7px;
+  border-right-width: 0;
+  border-left-width: var(--column-padding);
+  border-left-color: var(--event-background-color, blue);
+}
+
+.leftOverLapping {
+  left: -7px;
+  border-left-width: 0;
+  border-right-width: var(--column-padding);
+  border-right-color: var(--event-background-color, blue);
+}
+
+.showMoreEvent {
+  // calculations
+  // showMoreEventWidth = columnWidth * eventSpan - columnPadding * 2
+  --show-more-event-width: calc(
+    var(--column-width) * var(--event-span, 1) - var(--column-padding) * 2
+  );
+  // showMoreEventLeft = columnWidth * (eventLeftSpan + headerColumns) + columnPadding
+  --show-more-event-left: calc(
+    var(--column-width) * (var(--event-left-span) + var(--header-columns)) +
+      var(--column-padding)
+  );
+  // showMoreEventHeight = eventHeight
+  --show-more-event-height: var(--event-height);
+
+  // fixed styles
+  position: absolute;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: var(--calendar-event-font-size, 12px);
+  color: #383946;
+  width: var(--show-more-event-width);
+  height: var(--show-more-event-height);
+  bottom: var(--column-padding);
+  left: var(--show-more-event-left);
+}

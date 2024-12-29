@@ -1,0 +1,10 @@
+.quaterViewCalendarWrapper {
+  --calendar-column-width: 150px;
+  width: 100%;
+  overflow: auto;
+}
+
+.releaseCalendarWrapper {
+  --column-padding-override: 0.5rem;
+  --event-height-override: 1.3rem;
+}

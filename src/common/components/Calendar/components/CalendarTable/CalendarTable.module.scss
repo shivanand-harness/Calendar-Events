@@ -1,0 +1,55 @@
+.calendarTable {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid #d9dae5;
+  border-left: 1px solid #d9dae5;
+  --column-padding: var(--column-padding-override, 10px);
+  --event-margin: var(--column-padding);
+  & .tableRow {
+    display: grid;
+    grid-template-columns: repeat(
+      var(--calendar-columns),
+      var(--calendar-column-width, 1fr)
+    );
+    position: relative;
+    min-width: min-content;
+    flex: unset;
+    height: var(--calendar-table-row-height, 100px);
+    min-height: 150px;
+  }
+
+  & .tableRow.compact {
+    flex: 1 !important;
+    min-height: unset;
+  }
+
+  & .tableHeaderRow {
+    height: max-content;
+    flex: none;
+    min-height: unset;
+    min-width: min-content;
+
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 11;
+  }
+
+  & .tableCell {
+    border-bottom: 1px solid #d9dae5;
+    border-right: 1px solid #d9dae5;
+    text-align: right;
+    padding: var(--column-padding, 10px);
+    color: #383946;
+  }
+
+  & .notCurrentMonth {
+    color: #cdcdcd;
+  }
+
+  & .headerCell {
+    text-align: center;
+    font-weight: 800;
+  }
+}

@@ -1,0 +1,19 @@
+@import "~normalize.css";
+@import "~@blueprintjs/core/lib/css/blueprint.css";
+@import "~@harnessio/uicore";
+
+.App {
+  font-family: sans-serif;
+  height: 100vh;
+  width: 100%;
+  padding: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0px !important;
+  color: #383946;
+}
